@@ -45,8 +45,8 @@ install:
 	$(PIP) install .
 
 .PHONY: install-dev
-# phipict (the CUDA solver) must be installed first, see
-# https://github.com/safe-autonomous-systems/phiPICT
+# phipict (the CUDA solver) comes from PyPI; for other PyTorch versions, build
+# it from source first, see https://github.com/upb-sciml/phiPICT
 install-dev:
 	$(PIP) install --group dev -e .
 

@@ -31,6 +31,7 @@ from .envs.rbc import (
     RBCEnv2D,
     RBCEnv3D,
 )
+from .envs.rbc_mhd import RBC_MHD_3D_DEFAULT_CONFIG, RBCMHDEnv3D
 from .envs.tcf import (
     LARGE_TCF_3D_DEFAULT_CONFIG,
     SMALL_TCF_3D_DEFAULT_CONFIG,
@@ -369,6 +370,30 @@ register(
     reynolds_number=5e3,
 )
 
+# ------------------------------------------------------------------------
+# 3D Rayleigh-Bénard Convection Environments in a Horizontal Magnetic Field
+# ------------------------------------------------------------------------
+register(
+    id="RBCMHD3D-easy-v0",
+    entry_point=RBCMHDEnv3D,
+    defaults=RBC_MHD_3D_DEFAULT_CONFIG,
+    rayleigh_number=2e4,
+)
+
+register(
+    id="RBCMHD3D-medium-v0",
+    entry_point=RBCMHDEnv3D,
+    defaults=RBC_MHD_3D_DEFAULT_CONFIG,
+    rayleigh_number=5e4,
+)
+
+register(
+    id="RBCMHD3D-hard-v0",
+    entry_point=RBCMHDEnv3D,
+    defaults=RBC_MHD_3D_DEFAULT_CONFIG,
+    rayleigh_number=1e5,
+    resolution=48,
+)
 
 __all__ = [
     "DEFAULT_PALETTE",

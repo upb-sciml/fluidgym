@@ -31,7 +31,7 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.10-EE4C2C?logo=pytorch&logoColor=white)
 ![CUDA](https://img.shields.io/badge/CUDA-12.8-%2376B900)
 ![License](https://img.shields.io/badge/License-MIT-orange)
-[![Linters](https://github.com/safe-autonomous-systems/fluidgym/actions/workflows/linters.yml/badge.svg?branch=main)](https://github.com/safe-autonomous-systems/fluidgym/actions/workflows/linters.yml)
+[![Linters](https://github.com/upb-sciml/fluidgym/actions/workflows/linters.yml/badge.svg?branch=main)](https://github.com/upb-sciml/fluidgym/actions/workflows/linters.yml)
     
 </div>
 
@@ -39,7 +39,7 @@
     <h3>
       <a href="#-installation">Installation</a> |
       <a href="#-getting-started">Getting Started</a> |
-      <a href="https://safe-autonomous-systems.github.io/fluidgym/docs/">Documentation</a> | 
+      <a href="https://upb-sciml.github.io/fluidgym/docs/">Documentation</a> | 
       <a href="https://arxiv.org/abs/2601.15015">Paper</a> |
       <a href="#-license-&-citation">License & Citation</a>
     </h3>
@@ -110,12 +110,12 @@ Python 3.11–3.13.
 pip install fluidgym
 ```
 
-This also installs the solver [phiPICT](https://github.com/safe-autonomous-systems/phiPICT)
+This also installs the solver [phiPICT](https://github.com/upb-sciml/phiPICT)
 together with the matching PyTorch (2.10, built with CUDA 12.8). There is no need
 to install PyTorch first: phiPICT's compiled extension only works with the PyTorch
 version it was built against, so pip replaces any other version. For other
-PyTorch/CUDA versions, install a matching phiPICT build first, see its
-[installation docs](https://safe-autonomous-systems.github.io/phiPICT/installation.html).
+PyTorch/CUDA versions, build phiPICT from source against your PyTorch first, see
+its [installation docs](https://upb-sciml.github.io/phiPICT/installation.html#building-from-source).
 
 ### 🐳 Using Docker
 
@@ -156,7 +156,7 @@ editable mode together with the development dependencies (needs pip ≥ 25.1).
 
 ## Getting Started
 
-For an easy start, refer to our [documentation](https://safe-autonomous-systems.github.io/fluidgym/) and the [`examples`](examples) directory.
+For an easy start, refer to our [documentation](https://upb-sciml.github.io/fluidgym/) and the [`examples`](examples) directory.
 FluidGym provides a ```gymnasium```-like interface that can be used as follows:
 
 ```python

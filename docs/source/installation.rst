@@ -19,14 +19,14 @@ This is the simplest way to install FluidGym:
     pip install fluidgym
 
 This also installs the GPU-accelerated solver
-`phiPICT <https://github.com/safe-autonomous-systems/phiPICT>`_ together with
+`phiPICT <https://github.com/upb-sciml/phiPICT>`_ together with
 the PyTorch version it was built for (PyTorch 2.10 with CUDA 12.8). There is no
 need to install PyTorch first: phiPICT's compiled extension only works with the
 PyTorch version it was built against, so pip replaces any other version.
 
-To use a different PyTorch or CUDA version, install a matching phiPICT build
-first and then FluidGym, see the
-`phiPICT installation docs <https://safe-autonomous-systems.github.io/phiPICT/installation.html>`_.
+To use a different PyTorch or CUDA version, build phiPICT from source against
+your PyTorch first and then install FluidGym, see the
+`phiPICT installation docs <https://upb-sciml.github.io/phiPICT/installation.html#building-from-source>`_.
 
 2. From GitHub
 --------------
@@ -37,7 +37,7 @@ repository and install the package:
 
 .. code-block:: bash
 
-    git clone https://github.com/safe-autonomous-systems/fluidgym.git
+    git clone https://github.com/upb-sciml/fluidgym.git
     cd fluidgym
     pip install .
 

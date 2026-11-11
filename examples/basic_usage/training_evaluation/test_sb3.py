@@ -30,12 +30,10 @@ def run_experiment(cfg: DictConfig):
 
     logger.info("Initializing test environment...")
     fluid_test_env = fluidgym.make(
-        cfg.test_env_id,
-        use_marl=cfg.test_rl_mode == "marl",
-        **cfg.test_env_kwargs
+        cfg.test_env_id, use_marl=cfg.test_rl_mode == "marl", **cfg.test_env_kwargs
     )
     fluid_test_env = FlattenObservation(fluid_test_env)
-        
+
     if cfg.test_rl_mode == "marl":
         test_env = VecFluidEnv(fluid_test_env, auto_reset=False)
     elif cfg.test_rl_mode == "sarl":

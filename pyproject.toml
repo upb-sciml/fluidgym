@@ -10,10 +10,9 @@ authors = [
 requires-python = ">=3.11,<3.14"
 dependencies = [
     # The solver; torch and pyamg come with it (phipict pins the torch minor
-    # version its extension is built for). Released together with phipict;
-    # ==0.1.* also accepts the +ptXYcuXYZ builds from the phipict wheel index.
+    # version its extension is built for)
     "phipict==0.1.*",
-    "gymnasium==1.2.1",
+    "gymnasium>=1.2.1",
     "numpy",
     "pandas",
     "matplotlib>=3.9",
@@ -32,8 +31,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/safe-autonomous-systems/fluidgym"
-Documentation = "https://safe-autonomous-systems.github.io/fluidgym"
+Homepage = "https://github.com/upb-sciml/fluidgym"
+Documentation = "https://upb-sciml.github.io/fluidgym"
 
 [project.optional-dependencies]
 sb3 = [
@@ -96,11 +95,11 @@ replacement = ""
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 pattern = '(src|href)="(?:\./)?(?!https?://|#)'
-replacement = '\1="https://raw.githubusercontent.com/safe-autonomous-systems/fluidgym/main/'
+replacement = '\1="https://raw.githubusercontent.com/upb-sciml/fluidgym/main/'
 
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 pattern = '\]\((?:\./)?(?!https?://|#|mailto:)([^)]+)\)'
-replacement = '](https://github.com/safe-autonomous-systems/fluidgym/blob/main/\1)'
+replacement = '](https://github.com/upb-sciml/fluidgym/blob/main/\1)'
 
 [tool.hatch.build.targets.sdist]
 include = [

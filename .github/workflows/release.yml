@@ -61,8 +61,8 @@ jobs:
 
   # Installs the built wheel on every supported Python and imports it, so a
   # broken wheel or an unsupported Python fails before anything is published.
-  # phipict comes from TestPyPI unless publishing to PyPI; everything else
-  # (torch with its CUDA wheels, several GB) from PyPI.
+  # All dependencies, phipict and torch with its CUDA wheels (several GB)
+  # included, come from PyPI.
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -96,16 +96,6 @@ jobs:
           name: dist
           path: dist/
 
-      # Only phipict from TestPyPI (--no-deps): anyone can upload any package
-      # there, so its dependencies must still come from PyPI
-      - name: Install phipict from TestPyPI
-        if: inputs.target != 'pypi'
-        run: |
-          req=$(unzip -p dist/*.whl '*/METADATA' \
-            | sed -nE 's/^Requires-Dist: phipict(\[[^]]*\])?([^;]*).*/phipict\2/p')
-          echo "$req"
-          pip install --no-deps --index-url https://test.pypi.org/simple/ "$req"
-
       - name: Install the wheel
         run: |
           pip install dist/*.whl
@@ -129,7 +119,7 @@ jobs:
     timeout-minutes: 10
     # Trusted publishing: this repo/workflow/environment is registered as a
     # publisher on test.pypi.org (environment testpypi) and pypi.org
-    # (environment pypi), see CI.md; no token needed.
+    # (environment pypi); no token needed.
     environment:
       name: ${{ inputs.target }}
       url: https://${{ inputs.target == 'testpypi' && 'test.' || '' }}pypi.org/p/fluidgym

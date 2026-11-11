@@ -32,10 +32,13 @@ eval_callback:
   use_wandb: ${wandb.enable}
   checkpoint_latest: ${checkpoint_latest}
 
+# Logging to Weights & Biases: set enable to true and fill in your entity and
+# project, or pass them on the command line, e.g. wandb.enable=true
+# wandb.entity=<your-wandb-entity> wandb.project=<your-wandb-project>
 wandb:
-  enable: true
-  entity: safe-autonomous-systems
-  project: jbecktepe-fluidgym-mhd
+  enable: false
+  entity: "<your-wandb-entity>"  # W&B user or team name; null uses your default
+  project: "<your-wandb-project>"
 
 hydra:
   output_subdir: "."

@@ -32,8 +32,18 @@ def run_experiment(cfg: DictConfig):
     logger.info("Training script started.")
 
     logger.info("Initializing environments...")
-    fluid_env = fluidgym.make(cfg.env_id, **cfg.env_kwargs, randomize_initial_state=False, load_domain_statistics=False)
-    fluid_eval_env = fluidgym.make(cfg.env_id, **cfg.eval_env_kwargs, randomize_initial_state=False, load_domain_statistics=False)
+    fluid_env = fluidgym.make(
+        cfg.env_id,
+        **cfg.env_kwargs,
+        randomize_initial_state=False,
+        load_domain_statistics=False,
+    )
+    fluid_eval_env = fluidgym.make(
+        cfg.env_id,
+        **cfg.eval_env_kwargs,
+        randomize_initial_state=False,
+        load_domain_statistics=False,
+    )
 
     fluid_env = FlattenObservation(fluid_env)
     fluid_eval_env = FlattenObservation(fluid_eval_env)

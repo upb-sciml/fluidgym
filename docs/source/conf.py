@@ -19,8 +19,8 @@ html_theme = "sphinx_rtd_theme"
 html_logo = "_static/img/logo_lm.png"
 html_context = {
     "display_github": True,
-    "github_url": "https://github.com/safe-autonomous-systems/fluidgym",
-    "github_user": "safe-autonomous-systems",
+    "github_url": "https://github.com/upb-sciml/fluidgym",
+    "github_user": "upb-sciml",
     "github_repo": "fluidgym",
     "github_version": "main",
     "conf_py_path": "/docs/source/",
