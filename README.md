@@ -4,6 +4,8 @@
     </a>
 </p>
 
+<h1 align="center">FluidGym: Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control</h1>
+
 <table style="border-collapse: collapse; border: none;">
   <tr>
     <td style="border: none; padding: 0;">
