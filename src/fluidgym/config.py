@@ -34,9 +34,7 @@ class Config:
 
     def __init__(self):
         self.settings = {
-            ConfigKey.HF_LOCAL_DOMAINS_REPO_ID: (
-                "upb-sciml/fluidgym-data"
-            ),
+            ConfigKey.HF_LOCAL_DOMAINS_REPO_ID: "upb-sciml/fluidgym-data",
             ConfigKey.LOCAL_DATA_PATH: Path(user_data_dir("FluidGym", "fluidgym")),
             ConfigKey.DTYPE: FP32,
         }
