@@ -1,7 +1,20 @@
 import datetime
 
-# Fail fast if module is not importable
-import fluidgym
+from sphinx.ext.autodoc.mock import _MockObject, mock
+
+# The solver phipict is a compiled CUDA extension and not installed for the docs
+# build; autodoc_mock_imports only covers autodoc, so the import here needs its own
+# mock. Fails fast if fluidgym itself is not importable
+autodoc_mock_imports = [
+    "phipict",
+]
+
+# Annotations such as ``float | SolverTolerance`` are evaluated on import, so the
+# mocked phipict types must support unions
+_MockObject.__or__ = _MockObject.__ror__ = lambda self, other: self
+
+with mock(autodoc_mock_imports):
+    import fluidgym
 
 project = "FluidGym"
 author = "Jannis Becktepe, Safe Autonomous Systems (SAS), TU Dortmund University"
@@ -9,8 +22,8 @@ copyright = (
     f"{datetime.date.today().strftime('%Y')}, "
     "Safe Autonomous Systems (SAS), TU Dortmund University"
 )
-release = fluidgym.__version__
-version = ".".join(release.split(".")[:2])
+version = ".".join(fluidgym.__version__.split(".")[:2])
+release = version
 
 templates_path = ["_templates"]
 html_static_path = ["_static"]
@@ -59,10 +72,6 @@ intersphinx_mapping = {
 
 # Inventories are fetched at build time; keep an offline build from stalling.
 intersphinx_timeout = 10
-
-autodoc_mock_imports = [
-    "phipict",
-]
 
 autosummary_generate = True
 autosummary_generate_overwrite = True
