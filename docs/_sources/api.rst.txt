@@ -8,5 +8,6 @@ API Reference
    api/wrappers
    api/cylinder
    api/rbc
+   api/rbc_mhd
    api/airfoil
    api/tcf

@@ -6,12 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adding Custom Environments to FluidGym &mdash; FluidGym 0.1.2 documentation</title>
+  <title>Adding Custom Environments to FluidGym &mdash; FluidGym 0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-    <link rel="canonical" href="https://safe-autonomous-systems.github.io/fluidgym/docs/advanced_usage/custom_environments.html" />
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -21,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Additional Configuration Options" href="configuration.html" />
-    <link rel="prev" title="Running FluidGym on multiple GPUs in parallel" href="parallelization.html" /> 
+    <link rel="prev" title="Differentiable Simulation" href="differentiable.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +33,7 @@
           
           <a href="../index.html" class="icon icon-home">
             FluidGym
-              <img src="../_static/logo_lm.png" class="logo" alt="Logo"/>
+              <img src="../_static/logo_v020.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -62,13 +61,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/action_noise.html">ActionNoise Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage/rendering.html">Rendering Environments</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced Usage</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Running FluidGym on multiple GPUs in parallel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="differentiable.html">Differentiable Simulation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Adding Custom Environments to FluidGym</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html">Additional Configuration Options</a></li>
 </ul>
@@ -83,6 +85,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/cylinder.html">Flow Past Cylinder</a><ul>
@@ -94,6 +98,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/airfoil.html">Flow Past Airfoil</a><ul>
@@ -129,7 +137,7 @@
           <li class="breadcrumb-item"><a href="index.html">Advanced Usage</a></li>
       <li class="breadcrumb-item active">Adding Custom Environments to FluidGym</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/safe-autonomous-systems/fluidgym/blob/main/docs/source/advanced_usage/custom_environments.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/upb-sciml/fluidgym/blob/main/docs/source/advanced_usage/custom_environments.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -142,106 +150,172 @@
 <p>FluidGym allows users to create and integrate their own custom fluid dynamics
 environments. This is particularly useful for researchers who want to experiment
 with specific fluid scenarios not covered by the built-in environments.</p>
-<p>To create a custom environment, you need to subclass <code class="docutils literal notranslate"><span class="pre">FluidEnv</span></code> from the
-<code class="docutils literal notranslate"><span class="pre">fluidgym.envs</span></code> module.</p>
-<p>Here is a basic example of how to create a custom environment:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.fluid_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">FluidEnv</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.simulation.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PISOtorch</span>
+<p>To create a custom environment, subclass <code class="docutils literal notranslate"><span class="pre">FluidEnv</span></code> from the
+<code class="docutils literal notranslate"><span class="pre">fluidgym.envs</span></code> module. The simulation itself is set up with the solver
+<a class="reference external" href="https://github.com/upb-sciml/phiPICT">phiPICT</a>: your environment builds a
+phiPICT <code class="docutils literal notranslate"><span class="pre">Domain</span></code> and <code class="docutils literal notranslate"><span class="pre">Simulation</span></code>, and <code class="docutils literal notranslate"><span class="pre">FluidEnv</span></code> takes care of resets,
+initial domains, batching (<code class="docutils literal notranslate"><span class="pre">n_envs</span></code>), MARL, rendering, differentiability and
+the gymnasium-like API.</p>
+<p>The built-in environments are the best reference for a concrete implementation,
+e.g. <code class="docutils literal notranslate"><span class="pre">fluidgym/envs/cylinder/rotating_cylinder_env_2d.py</span></code> together with
+<code class="docutils literal notranslate"><span class="pre">fluidgym/envs/cylinder/cylinder_env_base.py</span></code>.</p>
+<p>Here is a skeleton with all methods a custom environment implements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="kn">import</span> <span class="n">spaces</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict</span><span class="w"> </span><span class="kn">import</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">Hooks</span><span class="p">,</span> <span class="n">Simulation</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs</span><span class="w"> </span><span class="kn">import</span> <span class="n">FluidEnv</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomFluidEnv</span><span class="p">(</span><span class="n">FluidEnv</span><span class="p">):</span>
-    <span class="c1"># Here, you can define whether your environment supports multi-agent RL.</span>
-    <span class="c1"># If not, set this to False. Otherwise, set to True and implement the</span>
-    <span class="c1"># _step_marl_impl and _get_local_obs methods.</span>
+    <span class="c1"># Whether the environment supports multi-agent RL. If True, also</span>
+    <span class="c1"># implement _get_local_obs and _finish_marl_step.</span>
     <span class="n">_supports_marl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">adaptive_cfl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">step_length</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">episode_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">ndims</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">use_marl</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-        <span class="n">cuda_device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">load_initial_domain</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">load_domain_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">randomize_initial_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_actions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">differentiable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_marl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
-            <span class="n">adaptive_cfl</span><span class="o">=</span><span class="n">adaptive_cfl</span><span class="p">,</span>
-            <span class="n">step_length</span><span class="o">=</span><span class="n">step_length</span><span class="p">,</span>
-            <span class="n">episode_length</span><span class="o">=</span><span class="n">episode_length</span><span class="p">,</span>
-            <span class="n">ndims</span><span class="o">=</span><span class="n">ndims</span><span class="p">,</span>
+            <span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+            <span class="n">adaptive_cfl</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+            <span class="n">step_length</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>  <span class="c1"># simulation time per environment step</span>
+            <span class="n">episode_length</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>  <span class="c1"># environment steps per episode</span>
+            <span class="n">ndims</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">use_marl</span><span class="o">=</span><span class="n">use_marl</span><span class="p">,</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
-            <span class="n">cuda_device</span><span class="o">=</span><span class="n">cuda_device</span><span class="p">,</span>
-            <span class="n">load_initial_domain</span><span class="o">=</span><span class="n">load_initial_domain</span><span class="p">,</span>
-            <span class="n">load_domain_statistics</span><span class="o">=</span><span class="n">load_domain_statistics</span><span class="p">,</span>
-            <span class="n">randomize_initial_state</span><span class="o">=</span><span class="n">randomize_initial_state</span><span class="p">,</span>
-            <span class="n">enable_actions</span><span class="o">=</span><span class="n">enable_actions</span><span class="p">,</span>
-            <span class="n">differentiable</span><span class="o">=</span><span class="n">differentiable</span>
-
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>  <span class="c1"># dtype, cuda_device, differentiable, n_envs, ...</span>
         <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
-        <span class="c1"># Define and return the observation space for your environment</span>
-        <span class="k">pass</span>
+    <span class="c1"># ---- Spaces and metadata -------------------------------------------</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">:</span>
-        <span class="c1"># Define and return the action space for your environment</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
+        <span class="c1"># Action space of a single agent (of a single environment)</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PISOtorch</span><span class="o">.</span><span class="n">Domain</span><span class="p">:</span>
-        <span class="c1"># Define and return your custom PISOtorch domain here</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
+        <span class="c1"># Observation space of a single agent, one key per field</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_prep_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="n">PISOtorch</span><span class="o">.</span><span class="n">Domain</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="c1"># Define and return any preprocessing functions needed for your environment</span>
-        <span class="k">pass</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># The number of agents (1 without MARL support)</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="n">PISOtorch</span><span class="o">.</span><span class="n">Domain</span><span class="p">,</span> <span class="n">prep_fn</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
-        <span class="c1"># Define and return the PISOtorch simulation setup for your environment</span>
-        <span class="k">pass</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obs_resampling_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="c1"># Shape of the uniform grid the observations are resampled onto</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Unique identifier of the environment</span>
+        <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initial_domain_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Identifier of the initial domains (directory name in the data)</span>
+        <span class="o">...</span>
+
+    <span class="c1"># ---- Simulation setup ----------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Domain</span><span class="p">:</span>
+        <span class="c1"># Build the phiPICT domain: grid, blocks, boundaries, initial fields</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hooks</span><span class="p">:</span>
+        <span class="c1"># Callbacks the simulation runs at its hooks, e.g. to update</span>
+        <span class="c1"># boundary conditions; an empty Hooks() if none are needed</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="n">Domain</span><span class="p">,</span> <span class="n">hooks</span><span class="p">:</span> <span class="n">Hooks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
+        <span class="c1"># Create the phiPICT simulation for the domain</span>
+        <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_additional_initialization</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Any optional additional initialization steps for your environment</span>
-        <span class="k">pass</span>
+        <span class="c1"># Called whenever a new domain and simulation are set up (reset,</span>
+        <span class="c1"># load_domain, set_state), e.g. to cache boundary tensors</span>
+        <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_randomize_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Logic to randomize the domain if needed</span>
-        <span class="k">pass</span>
+        <span class="c1"># Randomize the current domain, e.g. perturb the initial fields</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">render_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="c1"># Define the shape of the rendered environment</span>
-        <span class="k">pass</span>
+    <span class="c1"># ---- Stepping --------------------------------------------------------</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># Unique identifier for the environment</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Write the action into the simulation, e.g. boundary velocities</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">initial_domain_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># Identifier for the initial domain configuration</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_advance_impl</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">n_sim_steps</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="c1"># Run n_sim_steps solver steps (self._sim.single_step()), applying</span>
+        <span class="c1"># the action, and return the metrics measured per step, stacked</span>
+        <span class="c1"># along the first dim, e.g. {"drag": [n_sim_steps, n_envs]}</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_step_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="c1"># Implement the step logic for your environment</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="c1"># Turn the metrics of one environment step into</span>
+        <span class="c1"># (observation, reward, terminated, info), using _get_global_obs()</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_step_marl_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-        <span class="c1"># Implement the step logic for your environment in case it supports multi-agent RL</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_global_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="c1"># Read the current observation from the flow state</span>
+        <span class="o">...</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_local_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="c1"># Implement the logic to get local observations for multi-agent RL</span>
-        <span class="k">pass</span>
+    <span class="c1"># ---- Multi-agent RL (only if _supports_marl) -------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_local_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="c1"># Per-agent observations</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_marl_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="c1"># Like _finish_step, but with per-agent observations and rewards</span>
+        <span class="o">...</span>
+
+    <span class="c1"># ---- Rendering and plotting ------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_render_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">render_3d</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="c1"># Map slice names to the field data to render</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Plot the configuration of the environment (domain, sensors, ...)</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>A few things to keep in mind:</p>
+<ul class="simple">
+<li><p><strong>Stepping is split in two.</strong> <code class="docutils literal notranslate"><span class="pre">_advance_impl</span></code> runs the solver and may be
+called several times per environment step, once per activation-checkpoint
+segment in differentiable mode. <code class="docutils literal notranslate"><span class="pre">_finish_step</span></code> runs once per environment
+step on the final state. Keep everything that depends on the full step
+(averaging, observation, reward) in <code class="docutils literal notranslate"><span class="pre">_finish_step</span></code>.</p></li>
+<li><p><strong>Batching.</strong> With <code class="docutils literal notranslate"><span class="pre">n_envs</span></code>, all environments share one simulation, and
+actions, metrics and observations carry a leading environment dim. Write the
+methods for this batched layout, as the built-in environments do.</p></li>
+<li><p><strong>Initial domains.</strong> With <code class="docutils literal notranslate"><span class="pre">load_initial_domain=True</span></code> (the default),
+<code class="docutils literal notranslate"><span class="pre">FluidEnv</span></code> loads the initial domains from the data identified by
+<code class="docutils literal notranslate"><span class="pre">initial_domain_id</span></code>. For a new environment, create them with your own
+uncontrolled runs, or pass <code class="docutils literal notranslate"><span class="pre">load_initial_domain=False</span></code> and
+<code class="docutils literal notranslate"><span class="pre">load_domain_statistics=False</span></code>.</p></li>
+</ul>
+<p>Finally, register the environment to create it with <code class="docutils literal notranslate"><span class="pre">fluidgym.make</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">fluidgym</span>
+
+<span class="n">fluidgym</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">"CustomFluidEnv-v0"</span><span class="p">,</span>
+    <span class="n">entry_point</span><span class="o">=</span><span class="n">CustomFluidEnv</span><span class="p">,</span>
+    <span class="n">defaults</span><span class="o">=</span><span class="p">{},</span>
+<span class="p">)</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">fluidgym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"CustomFluidEnv-v0"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -250,7 +324,7 @@ with specific fluid scenarios not covered by the built-in environments.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="parallelization.html" class="btn btn-neutral float-left" title="Running FluidGym on multiple GPUs in parallel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="differentiable.html" class="btn btn-neutral float-left" title="Differentiable Simulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="configuration.html" class="btn btn-neutral float-right" title="Additional Configuration Options" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

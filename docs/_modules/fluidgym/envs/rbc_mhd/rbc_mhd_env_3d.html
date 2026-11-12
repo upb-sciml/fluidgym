@@ -1,0 +1,1330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fluidgym.envs.rbc_mhd.rbc_mhd_env_3d &mdash; FluidGym 0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            FluidGym
+              <img src="../../../../_static/logo_v020.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../basic_usage/index.html">Basic Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../basic_usage/environments.html">Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../basic_usage/interfaces/index.html">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/interfaces/fluidgym.html">FluidGym</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/interfaces/gymnasium.html">Gymnasium</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/interfaces/torchrl.html">TorchRL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/interfaces/pettingzoo.html">Pettingzoo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/interfaces/sb3_vec_env.html">Stable-Baselines3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/interfaces/gradient_based_methods.html">Gradient-Based Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../basic_usage/wrappers/index.html">Wrappers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/wrappers/flatten_observation.html">FlattenObservation Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/wrappers/action_noise.html">ActionNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../basic_usage/wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../basic_usage/rendering.html">Rendering Environments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../advanced_usage/index.html">Advanced Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../advanced_usage/parallelization.html">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../advanced_usage/differentiable.html">Differentiable Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../advanced_usage/custom_environments.html">Adding Custom Environments to FluidGym</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../advanced_usage/configuration.html">Additional Configuration Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/fluidenv.html">FluidGym Environments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.fluid_env.FluidEnv.html">FluidEnv</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/wrappers.html">FluidGym Wrappers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.wrappers.flatten_obs.FlattenObservation.html">FlattenObservation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/cylinder.html">Flow Past Cylinder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.cylinder.CylinderJetEnv2D.html">CylinderJetEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.cylinder.CylinderRotEnv2D.html">CylinderRotEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.cylinder.CylinderJetEnv3D.html">CylinderJetEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/airfoil.html">Flow Past Airfoil</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.airfoil.AirfoilEnv2D.html">AirfoilEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.airfoil.AirfoilEnv3D.html">AirfoilEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/tcf.html">Turbulent Channel Flow (TCF)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.tcf.TCF3DBottomEnv.html">TCF3DBottomEnv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/generated/fluidgym.envs.tcf.TCF3DBothEnv.html">TCF3DBothEnv</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">FluidGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">fluidgym.envs.rbc_mhd.rbc_mhd_env_3d</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for fluidgym.envs.rbc_mhd.rbc_mhd_env_3d</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Rayleigh-Bénard convection under a horizontal magnetic field (RBC-MHD)."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="kn">import</span> <span class="n">spaces</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict</span><span class="w"> </span><span class="kn">import</span> <span class="n">_C</span><span class="p">,</span> <span class="n">Face</span><span class="p">,</span> <span class="n">Hook</span><span class="p">,</span> <span class="n">Hooks</span><span class="p">,</span> <span class="n">bc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict.grid.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cell_size</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict.grid.shapes</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict.simulation.mhd</span><span class="w"> </span><span class="kn">import</span> <span class="n">MHDSimulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict.simulation.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Simulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phipict.solvers.tolerance</span><span class="w"> </span><span class="kn">import</span> <span class="n">SolverTolerance</span><span class="p">,</span> <span class="n">parse_tolerance</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.fluid_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">FluidEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.rbc_mhd.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_rbc_mhd_domain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.util.mhd_grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_layer_thickness</span><span class="p">,</span> <span class="n">make_mhd_wall_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.util.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">render_3d_voxels</span>
+
+<span class="c1"># Relative to the RHS, so that the criterion keeps its meaning across grid sizes</span>
+<span class="n">_DEFAULT_POTENTIAL_TOL</span> <span class="o">=</span> <span class="n">SolverTolerance</span><span class="p">(</span><span class="n">rtol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-14</span><span class="p">)</span>
+
+<span class="n">RBC_MHD_3D_DEFAULT_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Ra = 50 Q, between the 4-3 roll transition and the no-roll regime of [1]</span>
+    <span class="s2">"rayleigh_number"</span><span class="p">:</span> <span class="mf">5e4</span><span class="p">,</span>
+    <span class="s2">"chandrasekhar_number"</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">,</span>
+    <span class="s2">"prandtl_number"</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">,</span>
+    <span class="s2">"aspect_ratio"</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+    <span class="s2">"aspect_ratio_x"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">"resolution"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="s2">"wall_grading"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="s2">"min_layer_cells"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"n_electrodes"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"n_stations"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">"electrode_fill"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">"max_current"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="c1"># Joule heating in the Hartmann layers costs many times the buoyancy power, so</span>
+    <span class="c1"># the weight is small; tuned on a 2 x 4 box to put the best current in bounds</span>
+    <span class="s2">"power_penalty_weight"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s2">"dt"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="s2">"adaptive_cfl"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+    <span class="s2">"step_length"</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
+    <span class="s2">"episode_length"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="s2">"local_obs_window"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"local_reward_weight"</span><span class="p">:</span> <span class="mf">0.0015</span><span class="p">,</span>  <span class="c1"># Based on beta in doi.org/10.1063/5.0153181</span>
+    <span class="s2">"advection_scheme"</span><span class="p">:</span> <span class="s2">"linear_upwind"</span><span class="p">,</span>
+    <span class="s2">"use_marl"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">"dtype"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+    <span class="s2">"load_initial_domain"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"load_domain_statistics"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"randomize_initial_state"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"enable_actions"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"differentiable"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">"pressure_warm_start"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"potential_tol"</span><span class="p">:</span> <span class="n">_DEFAULT_POTENTIAL_TOL</span><span class="p">,</span>
+    <span class="s2">"potential_solve_max_iter"</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="s2">"potential_use_preconditioner"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"exclude_potential_solve_gradients"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="RBCMHDEnv3D">
+<a class="viewcode-back" href="../../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html#fluidgym.envs.rbc_mhd.RBCMHDEnv3D">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RBCMHDEnv3D</span><span class="p">(</span><span class="n">FluidEnv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rayleigh-Bénard convection in a horizontal magnetic field.</span>
+
+<span class="sd">    Each Hartmann wall is divided into ``n_electrodes`` patches along y and</span>
+<span class="sd">    ``n_stations`` stations along z. Each patch holds a raised-cosine electrode</span>
+<span class="sd">    covering</span>
+<span class="sd">    ``electrode_fill`` of the patch pitch in y and z, surrounded by insulating</span>
+<span class="sd">    wall. Electrode ``k`` exists on both walls, and the pair carries the current</span>
+<span class="sd">    ``I_k``, half through each wall (the convention of</span>
+<span class="sd">    :mod:`fluidgym.envs.blanket.actuators`). The action sets ``I_k``; it is</span>
+<span class="sd">    centred to zero net current (the box is otherwise insulating, so the</span>
+<span class="sd">    potential problem needs it), clamped to the action bounds, centred again and</span>
+<span class="sd">    scaled by ``max_current``. In MARL mode, each station along z is an agent</span>
+<span class="sd">    that sets the currents of its column of electrodes.</span>
+
+<span class="sd">    The reward is the relative change of the volume-averaged Nusselt number</span>
+<span class="sd">    minus the electrical power fed into the fluid, relative to the power the</span>
+<span class="sd">    buoyancy does on the uncontrolled flow::</span>
+
+<span class="sd">        r = Nu / Nu_ref - 1 - power_penalty_weight * P_el / P_ref</span>
+
+<span class="sd">    so the heat transfer is to be raised, both averaged over the PISO steps of</span>
+<span class="sd">    the env step. ``Nu_ref`` and ``P_ref``</span>
+<span class="sd">    are the means of the uncontrolled episodes (domain statistics). In MARL</span>
+<span class="sd">    mode, an agent receives</span>
+<span class="sd">    ``local_reward_weight`` times the same Nusselt term over the columns of its</span>
+<span class="sd">    observation window plus the remainder of the global reward, as in</span>
+<span class="sd">    :class:`~fluidgym.envs.rbc.RBCEnv3D`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rayleigh_number: float</span>
+<span class="sd">        Rayleigh number based on ``H`` and the plate temperature difference.</span>
+
+<span class="sd">    chandrasekhar_number: float</span>
+<span class="sd">        Chandrasekhar number ``Q = Ha^2`` based on ``H``. Must be positive.</span>
+
+<span class="sd">    prandtl_number: float</span>
+<span class="sd">        Prandtl number.</span>
+
+<span class="sd">    aspect_ratio: float</span>
+<span class="sd">        Extent of the box along z, in units of ``H``.</span>
+
+<span class="sd">    aspect_ratio_x: float | None</span>
+<span class="sd">        Extent of the box along x, i.e. along ``B`` between the Hartmann walls,</span>
+<span class="sd">        in units of ``H``. Defaults to ``aspect_ratio``.</span>
+
+<span class="sd">    resolution: int</span>
+<span class="sd">        Number of cells along y; x and z have ``round(aspect_ratio_x *</span>
+<span class="sd">        resolution)`` and ``round(aspect_ratio * resolution)``.</span>
+
+<span class="sd">    wall_grading: float</span>
+<span class="sd">        tanh grading strength towards the walls normal to y and z.</span>
+
+<span class="sd">    min_layer_cells: int</span>
+<span class="sd">        Minimum number of cells inside the Hartmann layer at each Hartmann wall;</span>
+<span class="sd">        the x grading is chosen for it.</span>
+
+<span class="sd">    n_electrodes: int</span>
+<span class="sd">        Electrodes along y on each Hartmann wall.</span>
+
+<span class="sd">    n_stations: int | None</span>
+<span class="sd">        Electrode stations along z. Defaults to ``round(aspect_ratio *</span>
+<span class="sd">        n_electrodes)``.</span>
+
+<span class="sd">    electrode_fill: float</span>
+<span class="sd">        Fraction of the patch pitch an electrode covers in y and z, in (0, 1].</span>
+
+<span class="sd">    max_current: float</span>
+<span class="sd">        Largest current of an electrode pair (both walls together), in units of</span>
+<span class="sd">        ``sigma U B H^2``.</span>
+
+<span class="sd">    power_penalty_weight: float</span>
+<span class="sd">        Weight of the electrical power in the reward.</span>
+
+<span class="sd">    dt: float</span>
+<span class="sd">        The simulation time step; substeps adapt to ``adaptive_cfl``.</span>
+
+<span class="sd">    adaptive_cfl: float</span>
+<span class="sd">        Target CFL number for adaptive time stepping.</span>
+
+<span class="sd">    step_length: float</span>
+<span class="sd">        The physical time length of each environment step.</span>
+
+<span class="sd">    episode_length: int</span>
+<span class="sd">        The number of steps per episode.</span>
+
+<span class="sd">    local_obs_window: int</span>
+<span class="sd">        Number of electrode stations along z an agent observes in MARL mode</span>
+<span class="sd">        (odd). Beyond the side walls, the window holds the quiescent</span>
+<span class="sd">        conduction state.</span>
+
+<span class="sd">    local_reward_weight: float | None</span>
+<span class="sd">        Weighting factor for local rewards in multi-agent settings. Has to be set</span>
+<span class="sd">        for multi-agent RL.</span>
+
+<span class="sd">    advection_scheme: str</span>
+<span class="sd">        Convective scheme of the momentum equation, ``"central"`` or</span>
+<span class="sd">        ``"linear_upwind"``.</span>
+
+<span class="sd">    use_marl: bool</span>
+<span class="sd">        Whether to enable multi-agent reinforcement learning mode.</span>
+
+<span class="sd">    potential_tol: float | SolverTolerance | Mapping | None</span>
+<span class="sd">        Tolerance of the electric potential solve.</span>
+
+<span class="sd">    potential_solve_max_iter: int</span>
+<span class="sd">        Iteration limit of the electric potential solve.</span>
+
+<span class="sd">    potential_use_preconditioner: bool</span>
+<span class="sd">        Whether to solve the potential with AMG-preconditioned CG.</span>
+
+<span class="sd">    exclude_potential_solve_gradients: bool</span>
+<span class="sd">        Drop the gradient of the potential solve. Diagnostic only.</span>
+
+<span class="sd">    **kwargs</span>
+<span class="sd">        Parameters of :class:`~fluidgym.envs.fluid_env.FluidEnv`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] T. Yanagisawa, Y. Hamano, T. Miyagoshi, Y. Yamagishi, Y. Tasaka, and Y. Takeda,</span>
+<span class="sd">    “Convection patterns in a liquid metal under an imposed horizontal magnetic field,”</span>
+<span class="sd">    Phys. Rev. E, vol. 88, no. 6, p. 063020, Dec. 2013, doi: 10.1103/PhysRevE.88.063020.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">_default_render_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"x-z-temperature"</span>
+    <span class="n">_render_resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">_ndims</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">_supports_marl</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Same segment size as the 3D RBC env: the replay tape caps a differentiable</span>
+    <span class="c1"># rollout of a 3D env (see ``FluidEnv.bptt_segment_size``)</span>
+    <span class="n">_default_bptt_segment_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># 300 free-fall times at the default step length of 1.5</span>
+    <span class="n">_initial_domain_steps</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">_initial_domain_restart</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">_H</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">_T_hot</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">_T_cold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">_T_ref</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+    <span class="n">_n_sensors_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">_n_sensors_per_actuator</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="c1"># Resampling cells per H</span>
+    <span class="n">_n_obs_resampling</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span>
+
+    <span class="n">_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">"nusselt"</span><span class="p">,</span>
+        <span class="s2">"buoyancy_power"</span><span class="p">,</span>
+        <span class="s2">"electrical_power"</span><span class="p">,</span>
+        <span class="s2">"power_ratio"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">_sim</span><span class="p">:</span> <span class="n">MHDSimulation</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rayleigh_number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">chandrasekhar_number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">prandtl_number</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">aspect_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">wall_grading</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">min_layer_cells</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">n_electrodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">electrode_fill</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">max_current</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">power_penalty_weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">adaptive_cfl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">step_length</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">episode_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">aspect_ratio_x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_stations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">local_obs_window</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">local_reward_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">advection_scheme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear_upwind"</span><span class="p">,</span>
+        <span class="n">use_marl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">potential_tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">SolverTolerance</span> <span class="o">|</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">potential_solve_max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+        <span class="n">potential_use_preconditioner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">exclude_potential_solve_gradients</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">chandrasekhar_number</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"chandrasekhar_number must be positive."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">aspect_ratio</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"aspect_ratio must be positive."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">aspect_ratio_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">aspect_ratio_x</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"aspect_ratio_x must be positive."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_stations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_stations</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"n_stations must be at least 1."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_electrodes</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"n_electrodes must be at least 1."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">electrode_fill</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"electrode_fill must be in (0, 1]."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_current</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"max_current must be positive."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">power_penalty_weight</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"power_penalty_weight must be non-negative."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">local_obs_window</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">local_obs_window</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"local_obs_window must be a positive odd number."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">advection_scheme</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"CENTRAL"</span><span class="p">,</span> <span class="s2">"LINEAR_UPWIND"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown advection_scheme </span><span class="si">{</span><span class="n">advection_scheme</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rayleigh_number</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">rayleigh_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chandrasekhar_number</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">chandrasekhar_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prandtl_number</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">prandtl_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hartmann_number</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_chandrasekhar_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">aspect_ratio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio_x</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span> <span class="k">if</span> <span class="n">aspect_ratio_x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">aspect_ratio_x</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_Lx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio_x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_Lz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio_x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wall_grading</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wall_grading</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_layer_cells</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">min_layer_cells</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_electrodes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_electrodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations_set</span> <span class="o">=</span> <span class="n">n_stations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">n_stations</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n_stations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_electrodes</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_fill</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">electrode_fill</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_current</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_current</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_power_penalty_weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">power_penalty_weight</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_local_obs_window</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">local_obs_window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_local_reward_weight</span> <span class="o">=</span> <span class="n">local_reward_weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_advection_scheme</span> <span class="o">=</span> <span class="n">advection_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential_tol</span> <span class="o">=</span> <span class="n">parse_tolerance</span><span class="p">(</span>
+            <span class="n">_DEFAULT_POTENTIAL_TOL</span> <span class="k">if</span> <span class="n">potential_tol</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">potential_tol</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential_solve_max_iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">potential_solve_max_iter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential_use_preconditioner</span> <span class="o">=</span> <span class="n">potential_use_preconditioner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_potential_solve_gradients</span> <span class="o">=</span> <span class="n">exclude_potential_solve_gradients</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_e_b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="c1"># The initial domain id resolved by the base class depends on the grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_grid</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
+            <span class="n">adaptive_cfl</span><span class="o">=</span><span class="n">adaptive_cfl</span><span class="p">,</span>
+            <span class="n">step_length</span><span class="o">=</span><span class="n">step_length</span><span class="p">,</span>
+            <span class="n">episode_length</span><span class="o">=</span><span class="n">episode_length</span><span class="p">,</span>
+            <span class="n">ndims</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">use_marl</span><span class="o">=</span><span class="n">use_marl</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">to_env</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"device"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span><span class="p">,</span> <span class="s2">"dtype"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_distribution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_electrode_distribution</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+            <span class="o">**</span><span class="n">to_env</span>
+        <span class="p">)</span>  <span class="c1"># [K, Z, Y]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_distribution</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Cells of each agent's local window along z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_footprint_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_window_footprint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_z_vertices</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">**</span><span class="n">to_env</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_sensor_locations</span><span class="p">()</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Grid</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Vertex coordinates of the three axes; runs before the base initialisation."""</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">get_layer_thickness</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hartmann_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_e_b</span><span class="p">,</span> <span class="n">wall_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_grading</span> <span class="o">=</span> <span class="n">make_mhd_wall_weights</span><span class="p">(</span>
+            <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nx</span><span class="p">,</span>
+            <span class="n">delta</span><span class="o">=</span><span class="n">delta</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Lx</span><span class="p">,</span>
+            <span class="n">min_layer_cells</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_layer_cells</span><span class="p">,</span>
+            <span class="n">grading_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_weights</span> <span class="o">=</span> <span class="n">make_weights</span><span class="p">(</span>
+            <span class="n">grading_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="p">,</span>
+            <span class="n">grading</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_wall_grading</span><span class="p">,</span>
+            <span class="n">refinement</span><span class="o">=</span><span class="s2">"BOTH"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_z_weights</span> <span class="o">=</span> <span class="n">make_weights</span><span class="p">(</span>
+            <span class="n">grading_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_nz</span><span class="p">,</span>
+            <span class="n">grading</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_wall_grading</span><span class="p">,</span>
+            <span class="n">refinement</span><span class="o">=</span><span class="s2">"BOTH"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x_vertices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_Lx</span> <span class="o">*</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_weights</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y_vertices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_weights</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_z_vertices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_Lz</span> <span class="o">*</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z_weights</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cell_centers</span><span class="p">(</span><span class="n">vertices</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Actuator layout</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_electrode_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Share of each electrode's current per face cell, ``[K, Z, Y]``.</span>
+
+<span class="sd">        Electrode ``k = iz * n_electrodes + iy`` is centred in its patch. Its</span>
+<span class="sd">        cells get ``w * A / sum(w * A)``, with ``w`` the raised cosine over the</span>
+<span class="sd">        electrode and ``A`` the cell area, so a total current spreads as the</span>
+<span class="sd">        current density ``w``-shaped and each row sums to 1.</span>
+<span class="sd">        """</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">profiles</span><span class="p">(</span><span class="n">vertices</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">n_e</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+            <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_centers</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="n">pitch</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">n_e</span>
+            <span class="n">half_width</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_fill</span> <span class="o">*</span> <span class="n">pitch</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_e</span><span class="p">):</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">pitch</span>
+                <span class="n">xi</span> <span class="o">=</span> <span class="p">(</span><span class="n">centers</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span> <span class="o">/</span> <span class="n">half_width</span>
+                <span class="n">profile</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">xi</span><span class="p">))</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">xi</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="n">profiles_y</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y_vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_electrodes</span><span class="p">)</span>
+        <span class="n">profiles_z</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_z_vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span><span class="p">)</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_face_cell_area</span><span class="p">()</span>
+
+        <span class="n">dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">iz</span><span class="p">,</span> <span class="n">p_z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">profiles_z</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">iy</span><span class="p">,</span> <span class="n">p_y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">profiles_y</span><span class="p">):</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">p_z</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">p_y</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">area</span>
+                <span class="n">total</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Electrode (</span><span class="si">{</span><span class="n">iz</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">iy</span><span class="si">}</span><span class="s2">) covers no cell centre; increase "</span>
+                        <span class="s2">"resolution or electrode_fill."</span>
+                    <span class="p">)</span>
+                <span class="n">dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_face_cell_area</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Areas of the Hartmann wall face cells, ``[Z, Y]`` in float64."""</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_vertices</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z_vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z_vertices</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dz</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">dy</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_window_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Cells of each agent's observation window along one axis.</span>
+
+<span class="sd">        Returns ``[cells, n_stations]``, 1 where the cell centre lies within</span>
+<span class="sd">        ``local_obs_window // 2`` station pitches of the agent's own station.</span>
+<span class="sd">        """</span>
+        <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_centers</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span>
+        <span class="n">pitch</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="p">((</span><span class="n">centers</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">/</span> <span class="n">pitch</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="p">()</span><span class="o">.</span><span class="n">long</span><span class="p">()</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">patch</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_obs_window</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">electrode_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Electrode cells of a Hartmann wall, ``[Z, Y]`` bool."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_mask</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hartmann_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Hartmann number ``Ha = sqrt(Q)``."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hartmann_number</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stuart_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Lorentz force coefficient ``N = Q sqrt(Pr / Ra)``."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chandrasekhar_number</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prandtl_number</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rayleigh_number</span>
+        <span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Domain and simulation</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_C</span><span class="o">.</span><span class="n">Domain</span><span class="p">:</span>
+        <span class="c1"># The electrodes are applied by _apply_potential_layout</span>
+        <span class="k">return</span> <span class="n">make_rbc_mhd_domain</span><span class="p">(</span>
+            <span class="n">Lx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_Lx</span><span class="p">,</span>
+            <span class="n">H</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_H</span><span class="p">,</span>
+            <span class="n">Lz</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_Lz</span><span class="p">,</span>
+            <span class="n">x_weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_weights</span><span class="p">,</span>
+            <span class="n">y_weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_y_weights</span><span class="p">,</span>
+            <span class="n">z_weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_z_weights</span><span class="p">,</span>
+            <span class="n">rayleigh_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rayleigh_number</span><span class="p">,</span>
+            <span class="n">prandtl_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prandtl_number</span><span class="p">,</span>
+            <span class="n">T_hot</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span><span class="p">,</span>
+            <span class="n">T_cold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_cold</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span><span class="p">,</span>
+            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_torch_rng_cuda</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_conduction_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Temperature of the quiescent layer at heights ``y``."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_cold</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="n">_C</span><span class="o">.</span><span class="n">Domain</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hooks</span><span class="p">:</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">passiveScalar</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span>
+        <span class="n">zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">passiveScalar</span><span class="p">)</span>
+
+        <span class="c1"># Free-fall scaling, so the buoyancy factor is 1</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">buoyancy_fn</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">passiveScalar</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">setVelocitySource</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">zero</span><span class="p">,</span> <span class="n">T</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_ref</span><span class="p">,</span> <span class="n">zero</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">domain</span><span class="o">.</span><span class="n">UpdateDomainData</span><span class="p">()</span>
+
+        <span class="c1"># The buoyancy overwrites the velocity source and add_lorentz_force adds</span>
+        <span class="c1"># to it, so the buoyancy has to come first</span>
+        <span class="k">return</span> <span class="n">Hooks</span><span class="p">()</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Hook</span><span class="o">.</span><span class="n">PRE_VELOCITY_SETUP</span><span class="p">,</span> <span class="n">buoyancy_fn</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_potential_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="n">_C</span><span class="o">.</span><span class="n">Block</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set this environment's potential conditions on both Hartmann walls.</span>
+
+<span class="sd">        Current electrodes (all at zero) in insulating walls. Both faces are</span>
+<span class="sd">        overwritten completely, so the result does not depend on the conditions a</span>
+<span class="sd">        loaded domain brings. A zero current is an insulating wall, so all</span>
+<span class="sd">        electrode layouts share the initial domains of the plain insulating box.</span>
+
+<span class="sd">        Must run before the ``MHDSimulation`` is built: its constructor assembles</span>
+<span class="sd">        the potential matrix from these conditions, and a later change would</span>
+<span class="sd">        leave the matrix of the old layout in place.</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Face</span><span class="o">.</span><span class="n">X_MINUS</span><span class="p">,</span> <span class="n">Face</span><span class="o">.</span><span class="n">X_PLUS</span><span class="p">):</span>
+            <span class="c1"># Clears any per-cell types the face carries</span>
+            <span class="n">bc</span><span class="o">.</span><span class="n">set_bc</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">face</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">Potential</span><span class="o">.</span><span class="n">Insulating</span><span class="p">())</span>
+            <span class="n">bc</span><span class="o">.</span><span class="n">set_bc</span><span class="p">(</span>
+                <span class="n">block</span><span class="p">,</span>
+                <span class="n">face</span><span class="p">,</span>
+                <span class="n">bc</span><span class="o">.</span><span class="n">Potential</span><span class="o">.</span><span class="n">Current</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+                <span class="n">where</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrode_mask</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="n">_C</span><span class="o">.</span><span class="n">Domain</span><span class="p">,</span> <span class="n">hooks</span><span class="p">:</span> <span class="n">Hooks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_potential_layout</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">domain</span><span class="o">.</span><span class="n">setAdvectionScheme</span><span class="p">(</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">AdvectionScheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_advection_scheme</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">MHDSimulation</span><span class="p">(</span>
+            <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span>
+            <span class="n">hooks</span><span class="o">=</span><span class="n">hooks</span><span class="p">,</span>
+            <span class="n">stuart_number</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stuart_number</span><span class="p">),</span>
+            <span class="n">e_b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_e_b</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span><span class="p">),</span>
+            <span class="n">substeps</span><span class="o">=</span><span class="s2">"ADAPTIVE"</span><span class="p">,</span>
+            <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dt</span><span class="p">,</span>
+            <span class="n">corrector_steps</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">advection_tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolve_advection_tol</span><span class="p">(</span><span class="n">SolverTolerance</span><span class="p">(</span><span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)),</span>
+            <span class="n">pressure_tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolve_pressure_tol</span><span class="p">(</span><span class="n">SolverTolerance</span><span class="p">(</span><span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)),</span>
+            <span class="n">pressure_tol_intermediate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pressure_tol_intermediate</span><span class="p">,</span>
+            <span class="n">pressure_warm_start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pressure_warm_start</span><span class="p">,</span>
+            <span class="n">adaptive_CFL</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_adaptive_cfl</span><span class="p">,</span>
+            <span class="n">pressure_return_best_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">non_orthogonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">output_resampling_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">obs_resampling_shape</span><span class="p">,</span>
+            <span class="n">output_resampling_fill_max_steps</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+            <span class="n">differentiable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_differentiable</span><span class="p">,</span>
+            <span class="n">potential_tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential_tol</span><span class="p">,</span>
+            <span class="n">potential_normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">potential_use_BiCG</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">potential_solve_max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential_solve_max_iter</span><span class="p">,</span>
+            <span class="n">potential_solve_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="n">potential_return_best_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">potential_reuse_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">potential_use_preconditioner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential_use_preconditioner</span><span class="p">,</span>
+            <span class="n">exclude_potential_solve_gradients</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_exclude_potential_solve_gradients</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Retry a failed single-precision solve in double precision</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">solver_double_fallback</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">sim</span><span class="o">.</span><span class="n">make_divergence_free</span><span class="p">(</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_linear_solve_max_iter</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">linear_solve_max_iterations</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># A fresh domain starts with phi = 0, which the first step would turn into</span>
+        <span class="c1"># a current that is not divergence-free. A loaded phi stays a valid start</span>
+        <span class="c1"># under the new layout, whose zero currents are the insulating wall</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">make_current_divergence_free</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">sim</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_additional_initialization</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="o">.</span><span class="n">getBlock</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># The layout _apply_potential_layout set must have reached the faces</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_mask</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">PotentialBC</span><span class="o">.</span><span class="n">CURRENT</span><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">PotentialBC</span><span class="o">.</span><span class="n">INSULATING</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Face</span><span class="o">.</span><span class="n">X_MINUS</span><span class="p">,</span> <span class="n">Face</span><span class="o">.</span><span class="n">X_PLUS</span><span class="p">):</span>
+            <span class="n">types</span> <span class="o">=</span> <span class="n">bc</span><span class="o">.</span><span class="n">get_bc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">,</span> <span class="n">face</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">Potential</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                <span class="n">matches</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">expected</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">expected</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># A uniform face has no per-cell types</span>
+                <span class="n">matches</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">bc</span><span class="o">.</span><span class="n">Potential</span><span class="o">.</span><span class="n">Current</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_mask</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"The potential conditions of face </span><span class="si">{</span><span class="n">face</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> do not match the "</span>
+                    <span class="sa">f</span><span class="s2">"actuator layout of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> after applying it."</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Wall distance of the first cell centres and the face cell areas, for the</span>
+        <span class="c1"># electrical power</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_centers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_vertices</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h_minus</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x_vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h_plus</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x_vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_face_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_face_cell_area</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cell_size</span> <span class="o">=</span> <span class="n">get_cell_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># [Z, Y, X]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_randomize_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Mirror the state per environment, add noise and run a short while.</span>
+
+<span class="sd">        The box is symmetric under ``x -&gt; L - x``, which leaves ``B = e_x``</span>
+<span class="sd">        invariant (the Lorentz force is quadratic in ``B``), under</span>
+<span class="sd">        ``z -&gt; L - z`` and under the Boussinesq reflection ``y -&gt; -y`` with</span>
+<span class="sd">        ``T - T_ref`` changing sign.</span>
+<span class="sd">        """</span>
+        <span class="c1"># (flipped tensor dims, negated velocity components, T changes sign)</span>
+        <span class="n">symmetries</span> <span class="o">=</span> <span class="p">[([</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span> <span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="kc">False</span><span class="p">),</span> <span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">True</span><span class="p">)]</span>
+
+        <span class="n">T_envs</span><span class="p">,</span> <span class="n">u_envs</span><span class="p">,</span> <span class="n">p_envs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">T</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">passiveScalar</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">getVelocity</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">pressure</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">dims</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">flip_T</span> <span class="ow">in</span> <span class="n">symmetries</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_np_rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">T</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="n">dims</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+                <span class="n">u</span><span class="p">[:,</span> <span class="n">components</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span>
+                <span class="k">if</span> <span class="n">flip_T</span><span class="p">:</span>
+                    <span class="n">T</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_ref</span> <span class="o">-</span> <span class="n">T</span>
+            <span class="n">T_envs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">u_envs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="n">p_envs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">T</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">T_envs</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+            <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">std</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span><span class="p">,</span>
+            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_torch_rng_cuda</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_cold</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">setPassiveScalar</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">contiguous</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">setVelocity</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">u_envs</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">setPressure</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">p_envs</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="o">.</span><span class="n">UpdateDomainData</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">make_current_divergence_free</span><span class="p">()</span>
+
+        <span class="n">sim_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_np_rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">sim_time</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dt</span><span class="p">))):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">single_step</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_checkpoint_accessors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Extend the domain carry with ``u x e_b`` kept by the simulation.</span>
+
+<span class="sd">        ``add_lorentz_force`` reads ``sim._u_cross_eb_flat`` from the previous</span>
+<span class="sd">        step's magnetic step, which does not live in the ``Domain``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_checkpoint_accessors</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">_u_cross_eb_flat</span><span class="p">,</span>
+                <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="p">,</span> <span class="s2">"_u_cross_eb_flat"</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="RBCMHDEnv3D.detach">
+<a class="viewcode-back" href="../../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html#fluidgym.envs.rbc_mhd.RBCMHDEnv3D.detach">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">detach</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Detach all tensors from the current computation graph."""</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span></div>
+
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Spaces and observations</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The number of agents in the environment."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_marl</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obs_resampling_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""The shape ``(x, y, z)`` of the observation resampling grid."""</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_obs_resampling</span>
+        <span class="n">n_x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio_x</span> <span class="o">*</span> <span class="n">n</span><span class="p">))</span>
+        <span class="n">n_z</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span> <span class="o">*</span> <span class="n">n</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">n_x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n_z</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_n_sensors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Sensors along x, y and z, a whole number per station along z.</span>
+
+<span class="sd">        The electrodes have no actuators along x, so x gets the same sensor</span>
+<span class="sd">        spacing as z.</span>
+<span class="sd">        """</span>
+        <span class="n">n_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors_per_actuator</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span>
+        <span class="n">n_x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">n_z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Lx</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Lz</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">n_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors_y</span><span class="p">,</span> <span class="n">n_z</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_action_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Per-agent action space.</span>
+
+<span class="sd">        One entry per electrode ``(iz, iy)``.</span>
+<span class="sd">        """</span>
+        <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_marl</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_electrodes</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_electrodes</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Per-agent observation space."""</span>
+        <span class="n">n_x</span><span class="p">,</span> <span class="n">n_y</span><span class="p">,</span> <span class="n">n_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_marl</span><span class="p">:</span>
+            <span class="n">n_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_obs_window</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors_per_actuator</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_z</span><span class="p">,</span> <span class="n">n_y</span><span class="p">,</span> <span class="n">n_x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+                    <span class="n">low</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_cold</span><span class="p">,</span>
+                    <span class="n">high</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span><span class="p">,</span>
+                    <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="s2">"velocity"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+                    <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+                    <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+                    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_sensor_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Sensor indices on the observation grid, ``[3, R]`` rows ``(x, y, z)``.</span>
+
+<span class="sd">        Ordered with z slowest and x fastest, so the readings reshape to</span>
+<span class="sd">        ``[Z, Y, X]``.</span>
+<span class="sd">        """</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">((</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_res</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="p">()</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">n_res</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obs_resampling_shape</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"ij"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">z</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sensor_conduction_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Conduction temperature at the sensor heights, ``[n_sensors_y, 1]``."""</span>
+        <span class="n">n_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors_y</span>
+        <span class="n">n_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obs_resampling_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="p">((</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_y</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_res</span> <span class="o">/</span> <span class="n">n_y</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span> <span class="o">/</span> <span class="n">n_res</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conduction_profile</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">T</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_global_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="n">n_x</span><span class="p">,</span> <span class="n">n_y</span><span class="p">,</span> <span class="n">n_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors</span>
+        <span class="n">at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_locations</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_resample_blocks_at</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">passiveScalar</span><span class="p">],</span> <span class="n">at</span><span class="p">),</span>  <span class="c1"># type: ignore[list-item]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_resample_blocks_at</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">velocity</span><span class="p">],</span> <span class="n">at</span><span class="p">),</span>  <span class="c1"># type: ignore[list-item]</span>
+            <span class="p">],</span>
+            <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>  <span class="c1"># [E, 4, R]</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="n">readings</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">readings</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n_z</span><span class="p">,</span> <span class="n">n_y</span><span class="p">,</span> <span class="n">n_x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">readings</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">"velocity"</span><span class="p">:</span> <span class="n">readings</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sensor_windows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Windows of ``local_obs_window`` actuators of sensors along ``dim``.</span>
+
+<span class="sd">        Beyond the walls, the windows are zero-padded. The result has the</span>
+<span class="sd">        actuators at ``dim`` and the window right after it.</span>
+<span class="sd">        """</span>
+        <span class="n">per</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_sensors_per_actuator</span>
+        <span class="n">pad</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_local_obs_window</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">per</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">dim</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">pad</span><span class="p">,</span> <span class="n">pad</span><span class="p">]</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span><span class="o">.</span><span class="n">unfold</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_obs_window</span> <span class="o">*</span> <span class="n">per</span><span class="p">,</span> <span class="n">per</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">windows</span><span class="o">.</span><span class="n">movedim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_local_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Per-agent windows of the global observation, agents along dim 1.</span>
+
+<span class="sd">        The temperature is padded with the conduction profile and the velocity</span>
+<span class="sd">        with zeros, i.e. beyond the side walls the agents see quiescent fluid.</span>
+<span class="sd">        """</span>
+        <span class="n">global_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_obs</span><span class="p">()</span>
+        <span class="n">T_cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_conduction_profile</span><span class="p">()</span>
+        <span class="c1"># [E, C, Z, Y, X], zero for the quiescent state</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+            <span class="p">[(</span><span class="n">global_obs</span><span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span> <span class="o">-</span> <span class="n">T_cond</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">global_obs</span><span class="p">[</span><span class="s2">"velocity"</span><span class="p">]],</span>
+            <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># [E, C, A, W_z, Y, X] -&gt; [E, A, C, W_z, Y, X]</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sensor_windows</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">movedim</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"temperature"</span><span class="p">:</span> <span class="n">local</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">T_cond</span><span class="p">,</span>
+            <span class="s2">"velocity"</span><span class="p">:</span> <span class="n">local</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">:],</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_temperature_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""The resampled temperature of every environment, ``[E, 1, *spatial]``."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resample_blocks</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">passiveScalar</span><span class="p">])</span>  <span class="c1"># type: ignore[list-item]</span>
+
+<div class="viewcode-block" id="RBCMHDEnv3D.get_temperature">
+<a class="viewcode-back" href="../../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html#fluidgym.envs.rbc_mhd.RBCMHDEnv3D.get_temperature">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the current temperature field resampled to the render shape.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        torch.Tensor</span>
+<span class="sd">            Temperature field, with a leading env dim for a vectorized</span>
+<span class="sd">            environment.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_squeeze_fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_temperature_fields</span><span class="p">())</span></div>
+
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Actions</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_action_bounds</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""The action as ``[E, agents, per-agent entries]`` and its bounds."""</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">high</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">action</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">low</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_action_to_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Electrode currents per environment, ``[E, K]``."""</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_bounds</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c1"># Zero net current, again after the clamp, which can shift the mean</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Full current at the largest action magnitude the space allows</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">low</span><span class="o">.</span><span class="n">abs</span><span class="p">(),</span> <span class="n">high</span><span class="o">.</span><span class="n">abs</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_current</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cell_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">currents</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Current through each face cell of one Hartmann wall, ``[E, Z, Y]``.</span>
+
+<span class="sd">        Half of every pair's current goes through each wall.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"ek,kzy-&gt;ezy"</span><span class="p">,</span> <span class="n">currents</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_distribution</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the electrode currents."""</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_currents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_to_currents</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_cell_currents</span> <span class="o">=</span> <span class="n">cells</span>
+        <span class="c1"># Only the right-hand side depends on the values: no rebuild of the</span>
+        <span class="c1"># potential matrix</span>
+        <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Face</span><span class="o">.</span><span class="n">X_MINUS</span><span class="p">,</span> <span class="n">Face</span><span class="o">.</span><span class="n">X_PLUS</span><span class="p">):</span>
+            <span class="n">bc</span><span class="o">.</span><span class="n">set_potential_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">,</span> <span class="n">face</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Metrics and reward</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_volume_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Volume mean of ``[E, Z, Y, X]`` per environment."""</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">field</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_size</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_size</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convective_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""``u_y (T - T_ref)`` per cell, ``[E, Z, Y, X]``."""</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">passiveScalar</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_ref</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">velocity</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">T</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_flux_to_nusselt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flux_mean</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rayleigh_number</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prandtl_number</span><span class="p">)</span> <span class="o">*</span> <span class="n">flux_mean</span>
+
+<div class="viewcode-block" id="RBCMHDEnv3D.compute_nusselt">
+<a class="viewcode-back" href="../../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html#fluidgym.envs.rbc_mhd.RBCMHDEnv3D.compute_nusselt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_nusselt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Volume-averaged Nusselt number ``1 + sqrt(Ra Pr) &lt;u_y (T - T_ref)&gt;``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        torch.Tensor</span>
+<span class="sd">            The Nusselt number of every environment, ``[E]``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flux_to_nusselt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_volume_mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convective_flux</span><span class="p">()))</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_local_nusselt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Nusselt number over each agent's window columns, ``[E, n_agents]``."""</span>
+        <span class="n">weighted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convective_flux</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_size</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"ezyx,zi-&gt;ei"</span><span class="p">,</span> <span class="n">weighted</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_footprint_z</span><span class="p">)</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"zyx,zi-&gt;i"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cell_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_footprint_z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flux_to_nusselt</span><span class="p">(</span><span class="n">flux</span> <span class="o">/</span> <span class="n">volume</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_buoyancy_power</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Work done by the buoyancy per unit time, ``[E]``, in ``rho U^3 H^2``."""</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Lx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Lz</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_volume_mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convective_flux</span><span class="p">())</span> <span class="o">*</span> <span class="n">volume</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_electrical_power</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Electrical power fed into the fluid by the electrodes, ``[E]``.</span>
+
+<span class="sd">        ``P = N * sum I * phi_w`` over both Hartmann walls. The no-slip wall has</span>
+<span class="sd">        ``u x B = 0``, so the current density into the fluid is ``-dphi/dn`` and</span>
+<span class="sd">        the wall potential is ``phi_w = phi_P + h * I / A`` from the first cell</span>
+<span class="sd">        centre at distance ``h``. ``N`` converts ``sigma U^2 B^2 H^3`` to the</span>
+<span class="sd">        ``rho U^3 H^2`` of the buoyancy power, as it does for the Lorentz force.</span>
+<span class="sd">        """</span>
+        <span class="n">epot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">epot</span>
+        <span class="k">assert</span> <span class="n">epot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">epot</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">epot</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">epot</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">cells</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_cell_currents</span>
+        <span class="n">walls</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">epot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h_minus</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">epot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h_plus</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">phi_p</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">walls</span><span class="p">:</span>
+            <span class="n">phi_w</span> <span class="o">=</span> <span class="n">phi_p</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">cells</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_face_area</span>
+            <span class="n">power</span> <span class="o">=</span> <span class="n">power</span> <span class="o">+</span> <span class="p">(</span><span class="n">cells</span> <span class="o">*</span> <span class="n">phi_w</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stuart_number</span> <span class="o">*</span> <span class="n">power</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_metric_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Mean of the uncontrolled episodes, or 1 without domain statistics."""</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_stats</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metrics_stats</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nu_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Reference Nusselt number for the reward."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_ref</span><span class="p">(</span><span class="s2">"nusselt"</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Buoyancy power of the uncontrolled flow, the scale of the power penalty."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metric_ref</span><span class="p">(</span><span class="s2">"buoyancy_power"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_advance_impl</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">n_sim_steps</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Run ``n_sim_steps`` steps, recording the heat transfer and the powers."""</span>
+        <span class="c1"># Without actions the actuators keep the zero action reset() applied</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_actions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">nusselt</span><span class="p">,</span> <span class="n">buoyancy</span><span class="p">,</span> <span class="n">electrical</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sim_steps</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">single_step</span><span class="p">()</span>
+            <span class="n">nusselt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_nusselt</span><span class="p">())</span>
+            <span class="n">buoyancy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_buoyancy_power</span><span class="p">())</span>
+            <span class="n">electrical</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_electrical_power</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"nusselt"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">nusselt</span><span class="p">),</span>
+            <span class="s2">"buoyancy_power"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">buoyancy</span><span class="p">),</span>
+            <span class="s2">"electrical_power"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">electrical</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">"nusselt"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">"electrical_power"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">power_ratio</span> <span class="o">=</span> <span class="n">power</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_ref</span>
+
+        <span class="n">reward</span> <span class="o">=</span> <span class="n">nu</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu_ref</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_power_penalty_weight</span> <span class="o">*</span> <span class="n">power_ratio</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"nusselt"</span><span class="p">:</span> <span class="n">nu</span><span class="p">,</span>
+            <span class="s2">"buoyancy_power"</span><span class="p">:</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">"buoyancy_power"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="s2">"electrical_power"</span><span class="p">:</span> <span class="n">power</span><span class="p">,</span>
+            <span class="s2">"power_ratio"</span><span class="p">:</span> <span class="n">power_ratio</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_obs</span><span class="p">(),</span> <span class="n">reward</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_marl_step</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_reward_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"local_reward_weight must be set for multi-agent step."</span><span class="p">)</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">global_reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finish_step</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+
+        <span class="n">local_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_local_obs</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_reward_weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">local_nu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_local_nusselt</span><span class="p">()</span>
+            <span class="n">local_rewards</span> <span class="o">=</span> <span class="n">local_nu</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">nu_ref</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">local_rewards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_envs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dtype</span><span class="p">,</span>
+                <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cuda_device</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># [E, n_agents]</span>
+        <span class="n">agent_rewards</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_local_reward_weight</span> <span class="o">*</span> <span class="n">local_rewards</span>
+            <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_reward_weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">global_reward</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">info</span><span class="p">[</span><span class="s2">"global_reward"</span><span class="p">]</span> <span class="o">=</span> <span class="n">global_reward</span>
+
+        <span class="k">return</span> <span class="n">local_obs</span><span class="p">,</span> <span class="n">agent_rewards</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Rendering</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_render_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">render_3d</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">format_temperature</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_render_data</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">v_min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_cold</span><span class="p">,</span> <span class="n">v_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"rainbow"</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">format_signed</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="n">v_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mf">1e-12</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_render_data</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">v_min</span><span class="o">=-</span><span class="n">v_max</span><span class="p">,</span> <span class="n">v_max</span><span class="o">=</span><span class="n">v_max</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"RdBu_r"</span>
+            <span class="p">)</span>
+
+        <span class="n">T_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">passiveScalar</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">]</span>
+        <span class="n">T_xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_plane</span><span class="p">(</span><span class="n">T_blocks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"z"</span><span class="p">)</span>  <span class="c1"># (ny, nx)</span>
+        <span class="n">T_xz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_plane</span><span class="p">(</span><span class="n">T_blocks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"y"</span><span class="p">)</span>  <span class="c1"># (nz, nx)</span>
+        <span class="n">T_yz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_plane</span><span class="p">(</span><span class="n">T_blocks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>  <span class="c1"># (nz, ny)</span>
+        <span class="c1"># The vertical velocity across the rolls</span>
+        <span class="n">u_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_plane</span><span class="p">([</span><span class="n">b</span><span class="o">.</span><span class="n">velocity</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
+
+        <span class="n">render_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"x-y-temperature"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">format_temperature</span><span class="p">(</span><span class="n">T_xy</span><span class="p">)),</span>
+            <span class="s2">"x-z-temperature"</span><span class="p">:</span> <span class="n">format_temperature</span><span class="p">(</span><span class="n">T_xz</span><span class="p">),</span>
+            <span class="s2">"y-z-temperature"</span><span class="p">:</span> <span class="n">format_temperature</span><span class="p">(</span><span class="n">T_yz</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="s2">"y-z-velocity"</span><span class="p">:</span> <span class="n">format_signed</span><span class="p">(</span><span class="n">u_y</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="c1"># The potential on the first cell layer of the -x wall shows the</span>
+        <span class="c1"># electrode pattern</span>
+        <span class="n">epot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_plane</span><span class="p">([</span><span class="n">b</span><span class="o">.</span><span class="n">epot</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">render_data</span><span class="p">[</span><span class="s2">"y-z-epot_wall"</span><span class="p">]</span> <span class="o">=</span> <span class="n">format_signed</span><span class="p">(</span><span class="n">epot</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">render_3d</span><span class="p">:</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_render_env_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_temperature_fields</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">output_path_3d</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">output_path</span>
+                    <span class="o">/</span> <span class="sa">f</span><span class="s2">"3d_temperature_fig_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_episodes</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_steps</span><span class="si">}</span><span class="s2">.png"</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_path_3d</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">render_data</span><span class="p">[</span><span class="s2">"3d_temperature"</span><span class="p">]</span> <span class="o">=</span> <span class="n">render_3d_voxels</span><span class="p">(</span>
+                <span class="n">field</span><span class="o">=</span><span class="n">T</span><span class="p">,</span>
+                <span class="n">ds</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">field_range</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_T_cold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_hot</span><span class="p">),</span>
+                <span class="n">output_path</span><span class="o">=</span><span class="n">output_path_3d</span><span class="p">,</span>
+                <span class="n">colormap</span><span class="o">=</span><span class="s2">"rainbow"</span><span class="p">,</span>
+                <span class="n">view_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"elev"</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">"azim"</span><span class="p">:</span> <span class="mi">45</span><span class="p">},</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">render_data</span>
+
+<div class="viewcode-block" id="RBCMHDEnv3D.plot">
+<a class="viewcode-back" href="../../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html#fluidgym.envs.rbc_mhd.RBCMHDEnv3D.plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Plot the electrode current shares on a Hartmann wall.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output_path: Path | None</span>
+<span class="sd">            Directory to save the plot in. If None, the current directory is</span>
+<span class="sd">            used. Defaults to None.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_electrode_distribution</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y_vertices</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_z_vertices</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_equal</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Electrode current shares on the Hartmann walls"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.pdf"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Identifiers</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_physics_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Ra</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rayleigh_number</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">_Q</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_chandrasekhar_number</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"_Pr</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_prandtl_number</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">_A</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+        <span class="c1"># Only a box that is not square in plan gets a tag, so old ids stay valid</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio_x</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio</span><span class="p">:</span>
+            <span class="n">tag</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"_Ax</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_aspect_ratio_x</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">tag</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_actuator_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"_el</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_electrodes</span><span class="si">}</span><span class="s2">f</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_electrode_fill</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_stations_set</span><span class="p">:</span>
+            <span class="n">tag</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"s</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_stations</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="n">tag</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Unique identifier for the environment."""</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"RBCMHD3d_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_physics_tag</span><span class="p">()</span><span class="si">}</span><span class="s2">_N</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">_actuator_tag</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initial_domain_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Unique identifier for the initial domain.</span>
+
+<span class="sd">        The uncontrolled flow is the same for every electrode layout, and the electrode</span>
+<span class="sd">        conditions are applied after loading (see :meth:`_apply_potential_layout`),</span>
+<span class="sd">        so all of them share the domains of the plain insulating box.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"rbc_mhd_3d_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_physics_tag</span><span class="p">()</span><span class="si">}</span><span class="s2">_N</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_resolution</span><span class="si">}</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"_g</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_wall_grading</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Safe Autonomous Systems (SAS), TU Dortmund University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

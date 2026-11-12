@@ -6,18 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FluidGym Documentation &mdash; FluidGym 0.1.2 documentation</title>
+  <title>FluidGym Documentation &mdash; FluidGym 0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-    <link rel="canonical" href="https://safe-autonomous-systems.github.io/fluidgym/docs/index.html" />
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,7 +32,7 @@
           
           <a href="#" class="icon icon-home">
             FluidGym
-              <img src="_static/logo_lm.png" class="logo" alt="Logo"/>
+              <img src="_static/logo_v020.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -62,13 +60,16 @@
 <li class="toctree-l3"><a class="reference internal" href="basic_usage/wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basic_usage/wrappers/action_noise.html">ActionNoise Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basic_usage/wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic_usage/wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basic_usage/wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/rendering.html">Rendering Environments</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage/index.html">Advanced Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced_usage/parallelization.html">Running FluidGym on multiple GPUs in parallel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/parallelization.html">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_usage/differentiable.html">Differentiable Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_usage/custom_environments.html">Adding Custom Environments to FluidGym</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_usage/configuration.html">Additional Configuration Options</a></li>
 </ul>
@@ -83,6 +84,8 @@
 <li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api/cylinder.html">Flow Past Cylinder</a><ul>
@@ -94,6 +97,10 @@
 <li class="toctree-l2"><a class="reference internal" href="api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api/airfoil.html">Flow Past Airfoil</a><ul>
@@ -128,7 +135,7 @@
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">FluidGym Documentation</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/safe-autonomous-systems/fluidgym/blob/main/docs/source/index.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/upb-sciml/fluidgym/blob/main/docs/source/index.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>

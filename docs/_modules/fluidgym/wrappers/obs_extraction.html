@@ -5,12 +5,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fluidgym.wrappers.obs_extraction &mdash; FluidGym 0.1.2 documentation</title>
+  <title>fluidgym.wrappers.obs_extraction &mdash; FluidGym 0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-    <link rel="canonical" href="https://safe-autonomous-systems.github.io/fluidgym/docs/_modules/fluidgym/wrappers/obs_extraction.html" />
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
@@ -31,7 +30,7 @@
           
           <a href="../../../index.html" class="icon icon-home">
             FluidGym
-              <img src="../../../_static/logo_lm.png" class="logo" alt="Logo"/>
+              <img src="../../../_static/logo_v020.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -59,13 +58,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../basic_usage/wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../basic_usage/wrappers/action_noise.html">ActionNoise Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../basic_usage/wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../basic_usage/wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../basic_usage/wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../basic_usage/rendering.html">Rendering Environments</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../advanced_usage/index.html">Advanced Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../advanced_usage/parallelization.html">Running FluidGym on multiple GPUs in parallel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced_usage/parallelization.html">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../advanced_usage/differentiable.html">Differentiable Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../advanced_usage/custom_environments.html">Adding Custom Environments to FluidGym</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../advanced_usage/configuration.html">Additional Configuration Options</a></li>
 </ul>
@@ -80,6 +82,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/cylinder.html">Flow Past Cylinder</a><ul>
@@ -91,6 +95,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/airfoil.html">Flow Past Airfoil</a><ul>
@@ -134,7 +142,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for fluidgym.wrappers.obs_extraction</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;A wrapper that extracts specific observations from the observation dictionary.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""A wrapper that extracts specific observations from the observation dictionary."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="kn">import</span> <span class="n">spaces</span>
@@ -146,7 +156,7 @@
 <div class="viewcode-block" id="ObsExtraction">
 <a class="viewcode-back" href="../../../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html#fluidgym.wrappers.obs_extraction.ObsExtraction">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ObsExtraction</span><span class="p">(</span><span class="n">FluidWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A wrapper that extracts specific observations from the observation dictionary.</span>
+<span class="w">    </span><span class="sd">"""A wrapper that extracts specific observations from the observation dictionary.</span>
 
 <span class="sd">    It extracts only the observations specified in the `keys` list.</span>
 
@@ -157,21 +167,21 @@
 
 <span class="sd">    keys: list[str] | None</span>
 <span class="sd">        The list of keys to extract from the observation dictionary.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">FluidEnvLike</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Keys list must be non-empty or None.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Keys list must be non-empty or None."</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">,</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;ObsExtraction wrapper only supports Dict observation spaces.&quot;</span>
+                <span class="s2">"ObsExtraction wrapper only supports Dict observation spaces."</span>
             <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39; not found in observation space.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Key '</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">' not found in observation space."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__keys</span> <span class="o">=</span> <span class="n">keys</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
@@ -180,7 +190,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">observation_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The observation space of the environment.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The observation space of the environment."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__observation_space</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__filter_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
@@ -194,8 +204,9 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">randomize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">domain_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resets the environment to an initial internal state, returning an initial</span>
+<span class="w">        </span><span class="sd">"""Resets the environment to an initial internal state, returning an initial</span>
 <span class="sd">        observation and info.</span>
 
 <span class="sd">        Parameters</span>
@@ -208,12 +219,19 @@
 <span class="sd">            Whether to randomize the initial state. If None, the default behavior is</span>
 <span class="sd">            used.</span>
 
+<span class="sd">        domain_idx: int | Sequence[int] | None</span>
+<span class="sd">            Index of the initial domain to load, one for all environments or one per</span>
+<span class="sd">            environment of a vectorized environment. If None, the default behavior</span>
+<span class="sd">            is used. Defaults to None.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        tuple[dict[str, torch.Tensor], dict[str, torch.Tensor]]</span>
 <span class="sd">            A tuple containing the initial observation and an info dictionary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span> <span class="n">domain_idx</span><span class="o">=</span><span class="n">domain_idx</span>
+        <span class="p">)</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filter_obs</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">info</span></div>
@@ -224,12 +242,16 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
-        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="nb">bool</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="nb">bool</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run one timestep of the environment&#39;s dynamics using the agent actions.</span>
+<span class="w">        </span><span class="sd">"""Run one timestep of the environment's dynamics using the agent actions.</span>
 
 <span class="sd">        When the end of an episode is reached (``terminated or truncated``), it is</span>
-<span class="sd">        necessary to call :meth:`reset` to reset this environment&#39;s state for the next</span>
+<span class="sd">        necessary to call :meth:`reset` to reset this environment's state for the next</span>
 <span class="sd">        episode.</span>
 
 <span class="sd">        Parameters</span>
@@ -243,7 +265,7 @@
 <span class="sd">        dict[str, torch.Tensor], torch.Tensor, bool, bool, dict[str, torch.Tensor]]</span>
 <span class="sd">            A tuple containing the observation, reward, terminated flag, truncated flag,</span>
 <span class="sd">            and info dictionary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filter_obs</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
 

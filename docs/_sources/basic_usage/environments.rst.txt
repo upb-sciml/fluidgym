@@ -1,7 +1,7 @@
 Environments
 ============
 
-FluidGym provides 35+ environments across four fluid physics domains, each available in
+FluidGym provides 35+ environments across five fluid physics domains, each available in
 easy, medium, and hard difficulty levels.
 
 Flow Past Cylinder
@@ -78,6 +78,17 @@ plate. Heaters along the bottom wall are controlled to enhance heat transfer.
           :width: 100%
 
 See :doc:`/api/rbc` for the full environment list and API reference.
+
+Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)
+---------------------------------------------------------
+
+3D thermal convection of a liquid metal in a horizontal magnetic field, which aligns
+the convection rolls with the field. Current electrodes in the two Hartmann walls are
+controlled to enhance heat transfer at a small electrical power cost. Difficulty levels
+are Easy (Ra = 2×10⁴), Medium (Ra = 5×10⁴) and Hard (Ra = 1×10⁵), all at
+Chandrasekhar number Q = 10³.
+
+See :doc:`/api/rbc_mhd` for the full environment list and API reference.
 
 Turbulent Channel Flow (TCF)
 -----------------------------

@@ -6,12 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gradient-Based Methods &mdash; FluidGym 0.1.2 documentation</title>
+  <title>Gradient-Based Methods &mdash; FluidGym 0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-    <link rel="canonical" href="https://safe-autonomous-systems.github.io/fluidgym/docs/basic_usage/interfaces/gradient_based_methods.html" />
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
@@ -34,7 +33,7 @@
           
           <a href="../../index.html" class="icon icon-home">
             FluidGym
-              <img src="../../_static/logo_lm.png" class="logo" alt="Logo"/>
+              <img src="../../_static/logo_v020.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -62,13 +61,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../wrappers/action_noise.html">ActionNoise Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../rendering.html">Rendering Environments</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../advanced_usage/index.html">Advanced Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/parallelization.html">Running FluidGym on multiple GPUs in parallel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/parallelization.html">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/differentiable.html">Differentiable Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/custom_environments.html">Adding Custom Environments to FluidGym</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../advanced_usage/configuration.html">Additional Configuration Options</a></li>
 </ul>
@@ -83,6 +85,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/cylinder.html">Flow Past Cylinder</a><ul>
@@ -94,6 +98,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/airfoil.html">Flow Past Airfoil</a><ul>
@@ -130,7 +138,7 @@
           <li class="breadcrumb-item"><a href="index.html">Interfaces</a></li>
       <li class="breadcrumb-item active">Gradient-Based Methods</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/safe-autonomous-systems/fluidgym/blob/main/docs/source/basic_usage/interfaces/gradient_based_methods.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/upb-sciml/fluidgym/blob/main/docs/source/basic_usage/interfaces/gradient_based_methods.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -148,14 +156,17 @@ issues page.</p>
 <p>In addition to classic RL interfaces, FluidGym environments also support
 gradient-based methods for policy optimization. This allows users to leverage
 techniques DPC to be applied directly within FluidGym environments.</p>
-<p>Here is a simple example from <code class="docutils literal notranslate"><span class="pre">examples/interfaces/gradient_based_methods.py</span></code>:</p>
+<p>Here is a simple example from <code class="docutils literal notranslate"><span class="pre">examples/basic_usage/interfaces/gradient_based_methods.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">fluidgym</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">VideoRecorder</span>
 
 <span class="c1"># Create a FluidGym environment</span>
 <span class="n">env</span> <span class="o">=</span> <span class="n">fluidgym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-    <span class="s2">&quot;CylinderJet2D-easy-v0&quot;</span><span class="p">,</span>
+    <span class="s2">"CylinderJet2D-easy-v0"</span><span class="p">,</span>
     <span class="n">differentiable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># This flag enables backpropagation through the environment</span>
 <span class="p">)</span>
+<span class="c1"># Record every episode as gif, this renders a frame after every step</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">VideoRecorder</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">"cylinder"</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
@@ -170,13 +181,13 @@ techniques DPC to be applied directly within FluidGym environments.</p>
         <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
     <span class="n">reward</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Action gradients:&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Action gradients:"</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
 
     <span class="c1"># To detach the environment from the computation graph, use:</span>
     <span class="n">env</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
 
-    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
-<span class="n">env</span><span class="o">.</span><span class="n">save_gif</span><span class="p">(</span><span class="s2">&quot;cylinder.gif&quot;</span><span class="p">)</span>
+<span class="c1"># Closing the environment saves the gif of the last episode</span>
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

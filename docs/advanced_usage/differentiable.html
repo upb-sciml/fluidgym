@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Differentiable Simulation &mdash; FluidGym 0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Adding Custom Environments to FluidGym" href="custom_environments.html" />
+    <link rel="prev" title="Vectorized Environments: Batching and Multiple GPUs" href="parallelization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            FluidGym
+              <img src="../_static/logo_v020.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/index.html">Basic Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage/environments.html">Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage/interfaces/index.html">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/interfaces/fluidgym.html">FluidGym</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/interfaces/gymnasium.html">Gymnasium</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/interfaces/torchrl.html">TorchRL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/interfaces/pettingzoo.html">Pettingzoo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/interfaces/sb3_vec_env.html">Stable-Baselines3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/interfaces/gradient_based_methods.html">Gradient-Based Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage/wrappers/index.html">Wrappers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/flatten_observation.html">FlattenObservation Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/action_noise.html">ActionNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage/rendering.html">Rendering Environments</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced Usage</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="parallelization.html">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Differentiable Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_environments.html">Adding Custom Environments to FluidGym</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Additional Configuration Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/fluidenv.html">FluidGym Environments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.fluid_env.FluidEnv.html">FluidEnv</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/wrappers.html">FluidGym Wrappers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.flatten_obs.FlattenObservation.html">FlattenObservation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cylinder.html">Flow Past Cylinder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.cylinder.CylinderJetEnv2D.html">CylinderJetEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.cylinder.CylinderRotEnv2D.html">CylinderRotEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.cylinder.CylinderJetEnv3D.html">CylinderJetEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/airfoil.html">Flow Past Airfoil</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.airfoil.AirfoilEnv2D.html">AirfoilEnv2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.airfoil.AirfoilEnv3D.html">AirfoilEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/tcf.html">Turbulent Channel Flow (TCF)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.tcf.TCF3DBottomEnv.html">TCF3DBottomEnv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.tcf.TCF3DBothEnv.html">TCF3DBothEnv</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">FluidGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Advanced Usage</a></li>
+      <li class="breadcrumb-item active">Differentiable Simulation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/upb-sciml/fluidgym/blob/main/docs/source/advanced_usage/differentiable.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="differentiable-simulation">
+<h1>Differentiable Simulation<a class="headerlink" href="#differentiable-simulation" title="Link to this heading"></a></h1>
+<p>With <code class="docutils literal notranslate"><span class="pre">differentiable=True</span></code>, a FluidGym environment keeps the autograd graph of
+every simulation step. Observations and rewards returned by <code class="docutils literal notranslate"><span class="pre">step()</span></code> are then
+differentiable functions of the action and of the flow state, and PyTorch’s
+autograd can backpropagate through the solver. The
+<a class="reference internal" href="../basic_usage/interfaces/gradient_based_methods.html"><span class="doc">Gradient-Based Methods</span></a> page shows how to
+differentiate the reward w.r.t. the action. This page goes one level deeper and
+differentiates w.r.t. the flow state itself.</p>
+<section id="the-flow-state">
+<h2>The flow state<a class="headerlink" href="#the-flow-state" title="Link to this heading"></a></h2>
+<p>The differentiable state of the fluid is the velocity field of every block of
+the simulation domain (plus the passive scalar field, e.g. the temperature, in
+domains that transport one). To differentiate w.r.t. it, mark these tensors as
+leaves with <code class="docutils literal notranslate"><span class="pre">requires_grad_(True)</span></code> before calling <code class="docutils literal notranslate"><span class="pre">step()</span></code>.</p>
+</section>
+<section id="computing-the-observation-jacobian">
+<h2>Computing the observation Jacobian<a class="headerlink" href="#computing-the-observation-jacobian" title="Link to this heading"></a></h2>
+<p>The Jacobian <code class="docutils literal notranslate"><span class="pre">d(obs)</span> <span class="pre">/</span> <span class="pre">d(velocity)</span></code> describes how every sensor reading
+responds to the flow field. Here is a simple example from
+<code class="docutils literal notranslate"><span class="pre">examples/advanced_usage/differentiable/compute_obs_jacobian.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">fluidgym</span>
+
+<span class="c1"># Create a FluidGym environment. With differentiable=True the observation</span>
+<span class="c1"># returned by env.step() keeps a gradient graph back to the velocity field, so we</span>
+<span class="c1"># can differentiate observations w.r.t. the flow state.</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">fluidgym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+    <span class="s2">"CylinderJet2D-easy-v0"</span><span class="p">,</span>
+    <span class="n">differentiable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># This flag enables backpropagation through the environment</span>
+<span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">sample_action</span><span class="p">()</span>
+
+<span class="c1"># The differentiable "state" of the fluid is the per-block velocity field. Mark</span>
+<span class="c1"># the velocity components of every block as leaves we want gradients for.</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">velocity</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">_domain</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()]</span>
+
+<span class="c1"># Step the simulation. new_obs["velocity"] has shape [n_sensors, 2] and is now a</span>
+<span class="c1"># differentiable function of the velocity components marked above.</span>
+<span class="n">new_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">new_obs</span><span class="p">[</span><span class="s2">"velocity"</span><span class="p">]</span>
+
+<span class="c1"># Compute the Jacobian d(obs) / d(velocity) for the first block, one output row</span>
+<span class="c1"># at a time. Row i holds the gradient of obs.flatten()[i] w.r.t. the (flattened)</span>
+<span class="c1"># velocity field of block 0.</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">obs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">jacobian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span>
+    <span class="p">]</span>
+<span class="p">)</span>  <span class="c1"># shape: [n_sensors * 2, 2 * H * W]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Observation shape    :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Velocity field shape :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Jacobian shape       :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">jacobian</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+<span class="c1"># Detach the environment from the computation graph before the next step to avoid</span>
+<span class="c1"># accumulating the graph across steps:</span>
+<span class="n">env</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Every row of the Jacobian costs one backward pass through the simulation step,
+so the full Jacobian is only affordable for a small number of outputs.</p>
+</section>
+<section id="computing-a-vector-jacobian-product">
+<h2>Computing a vector-Jacobian product<a class="headerlink" href="#computing-a-vector-jacobian-product" title="Link to this heading"></a></h2>
+<p>When only the gradient of a scalar (or of a weighted sum of outputs) is needed,
+a vector-Jacobian product (VJP) gives it in a single backward pass, independent
+of the number of outputs. Here is a simple example from
+<code class="docutils literal notranslate"><span class="pre">examples/advanced_usage/differentiable/compute_state_vjp.py</span></code>, which computes
+the VJP of the state after one step w.r.t. the state before it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">fluidgym</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.util.diff_tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_flat_state</span><span class="p">,</span>
+    <span class="n">mark_state_differentiable</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">fluidgym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+    <span class="s2">"CylinderJet2D-easy-v0"</span><span class="p">,</span>
+    <span class="n">differentiable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># This flag enables backpropagation through the environment</span>
+<span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">sample_action</span><span class="p">()</span>
+
+<span class="c1"># The differentiable state of the fluid is the per-block velocity field, plus the</span>
+<span class="c1"># per-block passive scalar field for domains that transport one. Mark all of them</span>
+<span class="c1"># as leaves we want gradients for.</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">mark_state_differentiable</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">get_flat_state</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="n">cotangent</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+
+<span class="n">grad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+    <span class="n">outputs</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="p">,</span>
+    <span class="n">grad_outputs</span><span class="o">=</span><span class="n">cotangent</span><span class="p">,</span>
+    <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">create_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">allow_unused</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">materialize_grads</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"State dim :"</span><span class="p">,</span> <span class="n">outputs</span><span class="o">.</span><span class="n">numel</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"VJP shape :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>  <span class="c1"># [input_dim], one backward pass</span>
+
+<span class="c1"># Detach the env as soon as a new horizon is entered</span>
+<span class="n">env</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The cotangent <code class="docutils literal notranslate"><span class="pre">v</span></code> selects what is differentiated: <code class="docutils literal notranslate"><span class="pre">grad</span></code> is <code class="docutils literal notranslate"><span class="pre">v^T</span> <span class="pre">J</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">J</span></code> is the Jacobian of the new state w.r.t. the old one. A one-hot <code class="docutils literal notranslate"><span class="pre">v</span></code>
+yields a single row of <code class="docutils literal notranslate"><span class="pre">J</span></code>.</p>
+</section>
+<section id="detaching-the-environment">
+<h2>Detaching the environment<a class="headerlink" href="#detaching-the-environment" title="Link to this heading"></a></h2>
+<p>The graph grows with every step. Call <code class="docutils literal notranslate"><span class="pre">env.detach()</span></code> whenever a new horizon
+begins (e.g. after each backward pass) to cut the graph and free its memory.
+Otherwise, memory usage grows until the GPU runs out.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Differentiable environments run in a single process. They are not supported
+by <code class="xref py py-class docutils literal notranslate"><span class="pre">ParallelFluidEnv</span></code>, see
+<a class="reference internal" href="parallelization.html"><span class="doc">Vectorized Environments: Batching and Multiple GPUs</span></a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parallelization.html" class="btn btn-neutral float-left" title="Vectorized Environments: Batching and Multiple GPUs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="custom_environments.html" class="btn btn-neutral float-right" title="Adding Custom Environments to FluidGym" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Safe Autonomous Systems (SAS), TU Dortmund University.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

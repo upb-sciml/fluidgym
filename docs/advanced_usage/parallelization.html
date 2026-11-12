@@ -6,12 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Running FluidGym on multiple GPUs in parallel &mdash; FluidGym 0.1.2 documentation</title>
+  <title>Vectorized Environments: Batching and Multiple GPUs &mdash; FluidGym 0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-    <link rel="canonical" href="https://safe-autonomous-systems.github.io/fluidgym/docs/advanced_usage/parallelization.html" />
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -20,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Adding Custom Environments to FluidGym" href="custom_environments.html" />
+    <link rel="next" title="Differentiable Simulation" href="differentiable.html" />
     <link rel="prev" title="Advanced Usage" href="index.html" /> 
 </head>
 
@@ -34,7 +33,7 @@
           
           <a href="../index.html" class="icon icon-home">
             FluidGym
-              <img src="../_static/logo_lm.png" class="logo" alt="Logo"/>
+              <img src="../_static/logo_v020.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -62,13 +61,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/obs_extraction.html">ObsExtraction Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/action_noise.html">ActionNoise Wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/sensor_noise.html">SensorNoise Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/power_penalty.html">PowerPenalty Wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_usage/wrappers/video_recorder.html">VideoRecorder Wrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage/rendering.html">Rendering Environments</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced Usage</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Running FluidGym on multiple GPUs in parallel</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Vectorized Environments: Batching and Multiple GPUs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="differentiable.html">Differentiable Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="custom_environments.html">Adding Custom Environments to FluidGym</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html">Additional Configuration Options</a></li>
 </ul>
@@ -83,6 +85,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.obs_extraction.ObsExtraction.html">ObsExtraction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.action_noise.ActionNoise.html">ActionNoise</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.sensor_noise.SensorNoise.html">SensorNoise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.power_penalty.PowerPenalty.html">PowerPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.wrappers.video_recorder.VideoRecorder.html">VideoRecorder</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/cylinder.html">Flow Past Cylinder</a><ul>
@@ -94,6 +98,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/rbc.html">Rayleigh-Bénard Convection (RBC)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc.RBCEnv2D.html">RBCEnv2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc.RBCEnv3D.html">RBCEnv3D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rbc_mhd.html">Magnetohydrodynamic Rayleigh-Bénard Convection (RBC-MHD)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/generated/fluidgym.envs.rbc_mhd.RBCMHDEnv3D.html">RBCMHDEnv3D</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/airfoil.html">Flow Past Airfoil</a><ul>
@@ -127,9 +135,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Advanced Usage</a></li>
-      <li class="breadcrumb-item active">Running FluidGym on multiple GPUs in parallel</li>
+      <li class="breadcrumb-item active">Vectorized Environments: Batching and Multiple GPUs</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/safe-autonomous-systems/fluidgym/blob/main/docs/source/advanced_usage/parallelization.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/upb-sciml/fluidgym/blob/main/docs/source/advanced_usage/parallelization.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -137,29 +145,136 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="running-fluidgym-on-multiple-gpus-in-parallel">
-<h1>Running FluidGym on multiple GPUs in parallel<a class="headerlink" href="#running-fluidgym-on-multiple-gpus-in-parallel" title="Link to this heading"></a></h1>
+  <section id="vectorized-environments-batching-and-multiple-gpus">
+<h1>Vectorized Environments: Batching and Multiple GPUs<a class="headerlink" href="#vectorized-environments-batching-and-multiple-gpus" title="Link to this heading"></a></h1>
+<p>FluidGym can simulate many environments at once, on two levels:</p>
+<ul class="simple">
+<li><p><strong>Batching</strong> runs several environments in <em>one</em> simulation on <em>one</em> GPU. The
+environments share the grid, the solver setup and every kernel launch, so a
+batch of <code class="docutils literal notranslate"><span class="pre">B</span></code> small environments costs little more than a single one.
+Throughput grows almost linearly with <code class="docutils literal notranslate"><span class="pre">B</span></code> until the GPU is saturated.</p></li>
+<li><p><strong>GPU parallelization</strong> runs one worker process per GPU (or several per GPU),
+each simulating its own batch. This scales beyond a single GPU once its memory
+or compute is exhausted.</p></li>
+</ul>
+<p>Both give the same vector API, so a training script does not need to know which
+one it is running on. Batching alone is the cheapest option and should be the
+first choice. Add workers only when one GPU is not enough.</p>
+<section id="batching-on-a-single-gpu">
+<h2>Batching on a Single GPU<a class="headerlink" href="#batching-on-a-single-gpu" title="Link to this heading"></a></h2>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">n_envs</span></code> to <code class="xref py py-func docutils literal notranslate"><span class="pre">fluidgym.make()</span></code> (or call <code class="xref py py-func docutils literal notranslate"><span class="pre">fluidgym.make_vec()</span></code>
+without <code class="docutils literal notranslate"><span class="pre">devices</span></code>, which is equivalent). Here is a simple example from
+<code class="docutils literal notranslate"><span class="pre">examples/advanced_usage/parallelization/single_gpu.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">fluidgym</span>
+
+<span class="c1"># Four environments batched in one simulation on one GPU. They share the grid,</span>
+<span class="c1"># the solver setup and every kernel launch, so a small batch costs little more</span>
+<span class="c1"># than a single environment. fluidgym.make_vec(id, n_envs=4) is equivalent</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">fluidgym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"CylinderJet2D-easy-v0"</span><span class="p">,</span> <span class="n">n_envs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Everything has a leading env dim: [n_envs, ...], or [n_envs, n_agents, ...]</span>
+<span class="c1"># for MARL</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">sample_action</span><span class="p">()</span>
+
+<span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<span class="c1"># reward: [4], terminated/truncated: bool tensors [4]</span>
+
+<span class="c1"># The batch shares the episode clock, but every env can start from its own</span>
+<span class="c1"># initial domain</span>
+<span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">domain_idx</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<section id="the-vector-api">
+<h3>The vector API<a class="headerlink" href="#the-vector-api" title="Link to this heading"></a></h3>
+<p>With <code class="docutils literal notranslate"><span class="pre">n_envs</span></code> given (even <code class="docutils literal notranslate"><span class="pre">n_envs=1</span></code>), everything carries a leading env dim:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>action</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">*action_space.shape]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">n_agents,</span> <span class="pre">*action_space.shape]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>observation (per key)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">*space.shape]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">n_agents,</span> <span class="pre">*space.shape]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>reward</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">n_agents]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>terminated, truncated</p></td>
+<td><p>bool <code class="docutils literal notranslate"><span class="pre">[E]</span></code></p></td>
+<td><p>bool <code class="docutils literal notranslate"><span class="pre">[E]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>info (per key)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">...]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">...]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">action_space</span></code> and <code class="docutils literal notranslate"><span class="pre">observation_space</span></code> stay those of a single environment
+(and agent), like <code class="docutils literal notranslate"><span class="pre">single_action_space</span></code> in gymnasium’s vector envs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_envs</span></code> / <code class="docutils literal notranslate"><span class="pre">num_envs</span></code> give the number of environments, <code class="docutils literal notranslate"><span class="pre">vectorized</span></code> is
+True.</p></li>
+<li><p>Without <code class="docutils literal notranslate"><span class="pre">n_envs</span></code> (the default), nothing changes: a single environment with
+exactly the previous API.</p></li>
+</ul>
+</section>
+<section id="properties-of-a-batch">
+<h3>Properties of a batch<a class="headerlink" href="#properties-of-a-batch" title="Link to this heading"></a></h3>
+<p><strong>Shared episodes.</strong> The environments of a batch share the episode clock. They
+are reset together, are truncated at the same step, and never terminate early.
+Each environment has its own state, initial condition and actions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">domain_idx</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>  <span class="c1"># one initial domain per env</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">randomize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>                        <span class="c1"># every env draws its own</span>
+</pre></div>
+</div>
+<p><strong>Solver settings.</strong> Solver settings are shared, but relative tolerances are
+resolved per environment. Every environment converges exactly as it would on its
+own, so a batched environment reproduces the single environments up to
+round-off. The time step is common to all environments (the smallest adaptive
+time step of the batch).</p>
+<p><strong>Rendering.</strong> <code class="docutils literal notranslate"><span class="pre">render()</span></code> returns the frames of all environments,
+<code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">H,</span> <span class="pre">W,</span> <span class="pre">3]</span></code> (the layout of vectorized-env video recorders). Pass
+<code class="docutils literal notranslate"><span class="pre">env_ids</span></code> to choose which: one index returns a single frame <code class="docutils literal notranslate"><span class="pre">[H,</span> <span class="pre">W,</span> <span class="pre">3]</span></code>, a
+list returns a stack. The <code class="docutils literal notranslate"><span class="pre">VideoRecorder</span></code> wrapper takes <code class="docutils literal notranslate"><span class="pre">env_ids</span></code> as
+well and saves one GIF per recorded environment (<code class="docutils literal notranslate"><span class="pre">&lt;filename&gt;_env&lt;i&gt;_ep&lt;k&gt;.gif</span></code>).</p>
+<p><strong>Choosing the batch size.</strong> The best batch size depends on the environment
+and the GPU. Increase <code class="docutils literal notranslate"><span class="pre">n_envs</span></code> until the throughput (env steps per second)
+stops growing or the GPU runs out of memory. Beyond that point, more
+environments need more GPUs.</p>
+</section>
+</section>
+<section id="parallelization-on-multiple-gpus">
+<h2>Parallelization on Multiple GPUs<a class="headerlink" href="#parallelization-on-multiple-gpus" title="Link to this heading"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Experimental feature. If you encounter issues, please report them on our GitHub
 issues page.</p>
 </div>
-<p>FluidGym supports running experiments on multiple GPUs in parallel using the
-<cite>ParallelFluidEnv</cite> class to speed up training of RL agents.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fluidgym.envs.parallel_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParallelFluidEnv</span>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">devices</span></code> to <code class="xref py py-func docutils literal notranslate"><span class="pre">fluidgym.make_vec()</span></code> to get a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ParallelFluidEnv</span></code>. It starts one worker
+process per entry of <code class="docutils literal notranslate"><span class="pre">devices</span></code>, and every worker batches
+<code class="docutils literal notranslate"><span class="pre">n_envs</span> <span class="pre">/</span> <span class="pre">len(devices)</span></code> environments on its GPU. Here is a simple example from
+<code class="docutils literal notranslate"><span class="pre">examples/advanced_usage/parallelization/multi_gpu.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">fluidgym</span>
 
-<span class="c1"># Since the process is forked, we need to protect the entry point</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># Instead of using fluidgym.make, we directly create a ParallelFluidEnv</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">ParallelFluidEnv</span><span class="p">(</span>
-        <span class="n">env_id</span><span class="o">=</span><span class="s2">&quot;Airfoil3D-easy-v0&quot;</span><span class="p">,</span>
-        <span class="n">cuda_ids</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># List of GPU IDs to use</span>
-        <span class="n">use_marl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span>
+<span class="c1"># Since the worker processes are spawned, we need to protect the entry point</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="c1"># 128 environments: one worker process per GPU, each simulating 64</span>
+    <span class="c1"># environments batched together. n_envs must be divisible by len(devices)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">fluidgym</span><span class="o">.</span><span class="n">make_vec</span><span class="p">(</span><span class="s2">"CylinderJet2D-easy-v0"</span><span class="p">,</span> <span class="n">n_envs</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">devices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># From now on, everything works as usual with the first dimension</span>
-        <span class="c1"># being the number of parallel environments for SARL or</span>
-        <span class="c1"># number of parallel envs * number of agents for MARL.</span>
+        <span class="c1"># Everything has a leading env dim: [n_envs, ...], or</span>
+        <span class="c1"># [n_envs, n_agents, ...] for MARL. Worker r is seeded with seed + r</span>
         <span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
         <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -167,10 +282,54 @@ issues page.</p>
 
         <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
+        <span class="c1"># Results of a ParallelFluidEnv are returned on the CPU</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
+<ul class="simple">
+<li><p><strong>Workers and devices.</strong> <code class="docutils literal notranslate"><span class="pre">devices</span></code> lists the CUDA device of every worker. A
+device may occur several times, e.g. <code class="docutils literal notranslate"><span class="pre">devices=[0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1]</span></code> runs two
+workers per GPU. <code class="docutils literal notranslate"><span class="pre">n_envs</span></code> must be divisible by <code class="docutils literal notranslate"><span class="pre">len(devices)</span></code>.</p></li>
+<li><p><strong>Env order.</strong> The environments are split in order: worker <code class="docutils literal notranslate"><span class="pre">r</span></code> simulates
+environments <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">*</span> <span class="pre">n_envs</span> <span class="pre">/</span> <span class="pre">len(devices)</span></code> to
+<code class="docutils literal notranslate"><span class="pre">(r</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">n_envs</span> <span class="pre">/</span> <span class="pre">len(devices)</span> <span class="pre">-</span> <span class="pre">1</span></code>. Actions, observations, rewards and
+<code class="docutils literal notranslate"><span class="pre">domain_idx</span></code> in <code class="docutils literal notranslate"><span class="pre">reset</span></code> follow the same order.</p></li>
+<li><p><strong>Seeding.</strong> <code class="docutils literal notranslate"><span class="pre">seed(s)</span></code> and <code class="docutils literal notranslate"><span class="pre">reset(seed=s)</span></code> seed worker <code class="docutils literal notranslate"><span class="pre">r</span></code> with
+<code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">+</span> <span class="pre">r</span></code>, so the workers do not simulate identical batches.</p></li>
+<li><p><strong>Process start.</strong> The workers are spawned, so the script’s entry point must
+be protected by <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">__name__</span> <span class="pre">==</span> <span class="pre">&quot;__main__&quot;:</span></code>. Call <code class="docutils literal notranslate"><span class="pre">close()</span></code> (or use the
+environment as a context manager) to shut the workers down.</p></li>
+<li><p><strong>Data transfer.</strong> Actions are sent to the workers and results returned as CPU
+tensors, with the leading env dim of all workers concatenated.</p></li>
+<li><p><strong>Limitations.</strong> <code class="docutils literal notranslate"><span class="pre">ParallelFluidEnv</span></code> does not support differentiable
+environments. Use a batched environment on one GPU for gradient-based methods.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">ParallelFluidEnv</span></code> now follows the vector API. Its MARL observations are
+<code class="docutils literal notranslate"><span class="pre">[E,</span> <span class="pre">n_agents,</span> <span class="pre">...]</span></code> (previously flattened to <code class="docutils literal notranslate"><span class="pre">[E</span> <span class="pre">*</span> <span class="pre">n_agents,</span> <span class="pre">...]</span></code>), and
+its flags and infos are tensors with a leading env dim (previously lists).</p>
+</div>
+</section>
+<section id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Gymnasium</strong>: <code class="xref py py-class docutils literal notranslate"><span class="pre">GymVecFluidEnv</span></code> is a
+<code class="docutils literal notranslate"><span class="pre">gymnasium.vector.VectorEnv</span></code> with batched spaces. Its autoreset mode is
+<code class="docutils literal notranslate"><span class="pre">SAME_STEP</span></code>: the last observations are in <code class="docutils literal notranslate"><span class="pre">info[&quot;final_obs&quot;]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">GymFluidEnv</span></code> wraps single environments only.</p></li>
+<li><p><strong>Stable-Baselines3</strong>: <code class="xref py py-class docutils literal notranslate"><span class="pre">VecFluidEnv</span></code> accepts
+vectorized (and MARL) environments. Every agent of every environment is one
+SB3 environment (<code class="docutils literal notranslate"><span class="pre">num_envs</span> <span class="pre">=</span> <span class="pre">n_envs</span> <span class="pre">*</span> <span class="pre">n_agents</span></code>, environment-major).</p></li>
+<li><p><strong>TorchRL</strong>: <code class="xref py py-class docutils literal notranslate"><span class="pre">TorchRLFluidEnv</span></code> has batch
+size <code class="docutils literal notranslate"><span class="pre">(E,)</span></code>, or <code class="docutils literal notranslate"><span class="pre">(E,</span> <span class="pre">n_agents)</span></code> in MARL mode. <code class="docutils literal notranslate"><span class="pre">from_pixels=True</span></code> adds the
+rendered frames as <code class="docutils literal notranslate"><span class="pre">pixels</span></code> (e.g. for TorchRL’s <code class="docutils literal notranslate"><span class="pre">VideoRecorder</span></code>).</p></li>
+<li><p><strong>PettingZoo</strong> supports single environments only.</p></li>
+<li><p><strong>Wrappers</strong> keep the env dim: <code class="docutils literal notranslate"><span class="pre">FlattenObservation</span></code> flattens behind it, and
+<code class="docutils literal notranslate"><span class="pre">PowerPenalty</span></code> charges every environment (and agent) its own action power.</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -178,7 +337,7 @@ issues page.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Advanced Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="custom_environments.html" class="btn btn-neutral float-right" title="Adding Custom Environments to FluidGym" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="differentiable.html" class="btn btn-neutral float-right" title="Differentiable Simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
