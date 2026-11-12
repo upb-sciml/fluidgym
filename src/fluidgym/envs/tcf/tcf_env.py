@@ -13,7 +13,6 @@ from gymnasium import spaces
 from phipict import _C, Hooks
 from phipict.analysis import tcf_tools as TCF_tools
 from phipict.grid.helpers import get_cell_centers, get_cell_size
-from phipict.io.output import _resample_block_data
 from phipict.simulation.sgs import append_sgs_viscosity_prep_fn
 from phipict.simulation.simulation import Simulation
 from phipict.solvers.tolerance import SolverTolerance
@@ -694,13 +693,7 @@ class TCF3DBottomEnv(FluidEnv):
         # Compute Q
         Q = 0.5 * (Omega_norm_sq - S_norm_sq)
 
-        Q = _resample_block_data(
-            data_list=[Q[None, None, ...]],
-            vertex_coord_list=self._sim.output_resampling_coords,
-            resampling_out_shape=self._sim.output_resampling_shape,
-            ndims=self._ndims,
-            fill_max_steps=self._sim.output_resampling_fill_max_steps,
-        )
+        Q = self._resample_blocks([Q[None, None, ...]])
 
         return Q
 

@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from gymnasium import spaces
+from phipict.core.fields import Fields
 from phipict.grid.helpers import get_cell_size
 from phipict.solvers.tolerance import SolverTolerance
 
@@ -269,17 +270,11 @@ class RBCEnv3D(RBCEnvBase):
         return x_min, x_max, z_min, z_max
 
     def _get_global_obs(self) -> dict[str, torch.Tensor]:
-        # [E, C, Z, Y, X] -> sensor readings [E, C, R]
-        at = (
-            slice(None),
-            slice(None),
-            self._sensor_locations[2],
-            self._sensor_locations[1],
-            self._sensor_locations[0],
-        )
-        T = self._temperature_fields()[at]
-        u = self._velocity_fields()[at]
-        p = self._pressure_fields()[at]
+        # sensor readings [E, C, R], without resampling the full grid
+        at = self._sensor_locations
+        T = self._resample_blocks_at(Fields.PASSIVE_SCALAR, at)
+        u = self._resample_blocks_at(Fields.VELOCITY, at)
+        p = self._resample_blocks_at(Fields.PRESSURE, at)
         n_envs = T.size(0)
         grid = (self._n_sensors_x, self._n_sensors_y, self._n_sensors_x)
 

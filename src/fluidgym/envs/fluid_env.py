@@ -15,8 +15,9 @@ import seaborn as sns
 import torch
 from gymnasium import spaces
 from phipict import _C, Hooks
+from phipict.core.fields import Fields, domain_field
 from phipict.io.domain_io import load_domain, save_domain
-from phipict.io.output import _resample_block_data, plot_grids
+from phipict.io.output import plot_grids
 from phipict.simulation.simulation import Simulation
 from phipict.solvers.tolerance import SolverTolerance, parse_tolerance
 
@@ -165,9 +166,6 @@ class FluidEnv(ABC, FluidEnvLike):
 
     _reset_called: bool = False
     __resampler: MultiblockResampler | None = None
-    # (id(coords), id(out_indices)) -> DiffMultiblockResampler. See
-    # `_diff_resampler`; instance-level, assigned in __init__
-    __diff_resamplers: dict
 
     # Axes ("x", "y", "z") to mirror when rendering a plane, so that an env whose
     # domain is set up in an orientation that does not plot well can be shown the
@@ -177,6 +175,9 @@ class FluidEnv(ABC, FluidEnvLike):
     _render_resolution: int = 1
     # The environment of a batch that render() shows, see _render_env_data
     _render_env_idx: int = 0
+    # Whether render() is running: full-grid resamples then cover only that
+    # environment, see _resample_blocks
+    _rendering: bool = False
     # Index of this env's first environment in a larger vector env (the envs of
     # the workers of a ParallelFluidEnv), for the names of rendered frames
     _env_index_offset: int = 0
@@ -373,7 +374,6 @@ class FluidEnv(ABC, FluidEnvLike):
         self._randomize_initial_state = randomize_initial_state
         self._enable_actions = enable_actions
         self._differentiable = differentiable
-        self.__diff_resamplers = {}
 
         self._advection_tol = parse_tolerance(advection_tol)
         self._pressure_tol = parse_tolerance(pressure_tol)
@@ -1301,161 +1301,61 @@ class FluidEnv(ABC, FluidEnvLike):
 
         return self.__resampler
 
-    def _resample_is_differentiated(self) -> bool:
-        """Whether a resample issued right now should record a graph.
-
-        Mirrors ``Simulation._solve_is_differentiated``. Rendering and
-        ``collect_statistics`` run under ``no_grad``, so they keep the compiled
-        kernel and pay nothing for this.
-        """
-        return self._differentiable and torch.is_grad_enabled()
-
-    def _diff_resampler(self, out_indices: torch.Tensor | None = None):
-        """Cached differentiable resampler, optionally restricted to some cells.
-
-        The compiled kernel has no autograd support, so everything downstream of
-        it is detached; this is the pure-torch equivalent, which is not.
-
-        The resample is a fixed linear map (all the masks are geometry), so the
-        operator is built once, and ``out_indices`` keeps only the rows for the
-        cells actually read. That restriction is exact. It also matters: a few hundred
-        sensors need only a small fraction of the operator and tape of the full
-        grid.
-        """
-        from phipict.grid.resample import DiffMultiblockResampler
-
-        coords = self._sim.output_resampling_coords
-        out_shape = self._sim.output_resampling_shape
-        fill_max_steps = self._sim.output_resampling_fill_max_steps
-        dtype = self._domain.getBlocks()[0].velocity.dtype
-
-        # `output_resampling_coords` falls through to `domain.getVertexCoordinates()`,
-        # which hands back a fresh list of fresh tensor objects on every call, so
-        # `id()` is no identity for the grid: the lookup missed every time and the
-        # operator was rebuilt once per differentiated observation. A full weight
-        # assembly inside every replayed backward step. The key below is the geometry
-        # itself, and the entry holds the tensors it was built from, so the storage
-        # behind an address cannot be freed and reallocated while an entry names it
-        # (which is the way a `data_ptr` key goes stale and silently serves the wrong
-        # operator)
-        grid_key = (
-            None
-            if coords is None
-            else tuple((t.data_ptr(), tuple(t.shape), t.dtype) for t in coords)
-        )
-        out_key = (
-            None
-            if out_indices is None
-            else (out_indices.data_ptr(), tuple(out_indices.shape), out_indices.dtype)
-        )
-        shape_key = None if out_shape is None else tuple(out_shape)
-        key = (grid_key, out_key, shape_key, fill_max_steps, dtype)
-
-        cached = self.__diff_resamplers.get(key)
-        if cached is not None:
-            return cached[1]
-
-        resampler = DiffMultiblockResampler(
-            coords_list=coords,
-            out_shape=out_shape,
-            dtype=dtype,
-            fill_max_steps=fill_max_steps,
-            out_indices=out_indices,
-        )
-        # Keep only the operators for the current grid, so `set_state` cannot
-        # accumulate one hierarchy per rebuild. This also releases the previous
-        # grid's coordinates, which the dropped entries were keeping alive
-        self.__diff_resamplers = {
-            k: v for k, v in self.__diff_resamplers.items() if k[0] == grid_key
-        }
-        keep_alive = (
-            list(coords or ())
-            if out_indices is None
-            else [*(coords or ()), out_indices]
-        )
-        self.__diff_resamplers[key] = (keep_alive, resampler)
-        return resampler
-
-    def _fold_envs(
-        self, data_list: list[torch.Tensor]
-    ) -> tuple[list[torch.Tensor], int]:
-        """Fold the env dim of per-block data into the channels, for the samplers.
-
-        The samplers resample ``[1, C, ...]`` data with any number of channels, so
-        ``[E, C, ...]`` is resampled as ``[1, E * C, ...]`` in one call. Data shared
-        by all environments (``[1, C, ...]``) is broadcast first.
-        """
-        n_envs = max(data.size(0) for data in data_list)
-        if n_envs == 1:
-            return data_list, 1
-        folded = []
-        for data in data_list:
-            if data.size(0) != n_envs:
-                data = data.expand(n_envs, *data.shape[1:])
-            folded.append(data.reshape(1, -1, *data.shape[2:]))
-        return folded, n_envs
-
-    def _resample_blocks(self, data_list: list[torch.Tensor]) -> torch.Tensor:
+    def _resample_blocks(
+        self, data_list: Fields | Sequence[torch.Tensor]
+    ) -> torch.Tensor:
         """Resample per-block cell data onto the uniform output grid.
 
         This is the sampler behind :meth:`get_velocity`, :meth:`get_pressure` and
-        :meth:`get_vorticity`, and hence behind the observations. For rendering,
-        prefer :meth:`_render_plane`, which interpolates and is free of the block
-        artifacts of this sampler.
+        :meth:`get_vorticity`. For rendering, prefer :meth:`_render_plane`, which
+        interpolates and is free of the block artifacts of this sampler. For
+        observations at a few cells, use :meth:`_resample_blocks_at`, which never
+        materialises the full grid.
 
-        On a differentiable environment with grad enabled this routes to the
-        pure-torch resampler, so the observation stays connected to the action;
-        otherwise it uses the compiled kernel, which detaches.
+        While :meth:`render` runs, only the environment being rendered is
+        resampled, so rendering costs the same for any number of environments.
 
         Parameters
         ----------
-        data_list: list[torch.Tensor]
-            Per-block cell data, one entry per block of the domain.
+        data_list: Fields | Sequence[torch.Tensor]
+            A field of the blocks, or per-block cell data in block order.
 
         Returns
         -------
         torch.Tensor
             The resampled data of shape [E, C, Y, X] for 2D or [E, C, Z, Y, X] for
-            3D, with E the number of environments.
+            3D, with E the number of environments (1 while rendering).
         """
-        folded, n_envs = self._fold_envs(data_list)
-        if self._resample_is_differentiated():
-            out = self._diff_resampler()(folded)
-        else:
-            assert self._sim.output_resampling_coords is not None
-            assert self._sim.output_resampling_shape is not None
-
-            out = _resample_block_data(
-                data_list=folded,
-                vertex_coord_list=self._sim.output_resampling_coords,
-                resampling_out_shape=self._sim.output_resampling_shape,
-                ndims=self._ndims,
-                fill_max_steps=self._sim.output_resampling_fill_max_steps,
-            )
-        return out.reshape(n_envs, -1, *out.shape[2:])
+        if self._rendering:
+            if isinstance(data_list, Fields):
+                data_list = domain_field(self._domain, data_list)
+            data_list = [self._render_env_data(data) for data in data_list]
+        return self._sim.resample(data_list)
 
     def _resample_blocks_at(
-        self, data_list: list[torch.Tensor], out_indices: torch.Tensor
+        self, data_list: Fields | Sequence[torch.Tensor], out_indices: torch.Tensor
     ) -> torch.Tensor:
         """Resample per-block data straight to selected output cells.
 
         For point-sensor observations: same values as resampling the whole grid
-        and indexing it, at ~1e-4 of the cost. ``out_indices`` is a flat index or
-        a ``[dims, R]`` tensor of per-axis ``(x, y[, z])`` indices; results come
-        back as ``[E, C, R]`` in the order given, with E the number of
-        environments.
-        """
-        if self._resample_is_differentiated():
-            folded, n_envs = self._fold_envs(data_list)
-            out = self._diff_resampler(out_indices)(folded)
-            return out.reshape(n_envs, -1, out.size(-1))
+        and indexing it, at a fraction of the cost, and memory that does not grow
+        with the output grid. Differentiable with respect to the block data.
 
-        full = self._resample_blocks(data_list)
-        if out_indices.dim() == 2:
-            idx = [out_indices[d].long() for d in range(out_indices.size(0))]
-            # out_indices rows are (x, y[, z]); the grid is [..., z, y, x]
-            return full[(slice(None), slice(None), *reversed(idx))]
-        return full.reshape(full.size(0), full.size(1), -1)[:, :, out_indices.long()]
+        Parameters
+        ----------
+        data_list: Fields | Sequence[torch.Tensor]
+            A field of the blocks, or per-block cell data in block order.
+
+        out_indices: torch.Tensor
+            Flat indices into the output grid, or a ``[dims, R]`` tensor of
+            per-axis ``(x, y[, z])`` indices.
+
+        Returns
+        -------
+        torch.Tensor
+            The readings ``[E, C, R]``, in the order of ``out_indices``.
+        """
+        return self._sim.resample(data_list, out_indices)
 
     def _render_plane(
         self,
@@ -1566,6 +1466,11 @@ class FluidEnv(ABC, FluidEnvLike):
         """
         self._domain.UpdateDomainData()
         gradients = _C.ComputeSpatialVelocityGradients(self._domain)
+        if self._rendering:
+            # only the rendered environment, before the per-env temporaries below
+            gradients = [
+                [self._render_env_data(g) for g in block] for block in gradients
+            ]
 
         # gradients[block][k] is the gradient of the k'th velocity component,
         # with the channel axis holding the spatial direction: grad_u[:, i] = du/dx_i
@@ -1624,19 +1529,19 @@ class FluidEnv(ABC, FluidEnvLike):
 
     def _velocity_fields(self) -> torch.Tensor:
         """The resampled velocity of every environment, ``[E, C, *spatial]``."""
-        return self._resample_blocks(
-            [block.velocity for block in self._domain.getBlocks()]
-        )
+        return self._resample_blocks(Fields.VELOCITY)
 
     def _pressure_fields(self) -> torch.Tensor:
         """The resampled pressure of every environment, ``[E, 1, *spatial]``."""
-        return self._resample_blocks(
-            [block.pressure for block in self._domain.getBlocks()]
-        )
+        return self._resample_blocks(Fields.PRESSURE)
 
     def _render_env_field(self, fields: torch.Tensor) -> torch.Tensor:
-        """The field ``[C, *spatial]`` of the environment being rendered."""
-        return fields[self._render_env_idx]
+        """The field ``[C, *spatial]`` of the environment being rendered.
+
+        Fields resampled during :meth:`render` already hold only that
+        environment, see :meth:`_resample_blocks`.
+        """
+        return fields[0] if fields.size(0) == 1 else fields[self._render_env_idx]
 
     def get_vorticity(
         self,
@@ -2092,6 +1997,40 @@ class FluidEnv(ABC, FluidEnvLike):
         ]
         return frames[0] if single else np.stack(frames)
 
+    def _render_data_or_2d(
+        self, render_3d: bool, output_path: Path, save: bool
+    ) -> dict[str, np.ndarray]:
+        """:meth:`_get_render_data`, falling back to 2D slices on a CUDA OOM.
+
+        The 3D views resample and draw full volumes, which can exhaust the GPU
+        next to a large batch of environments. Then this renders the 2D slices
+        only, with a warning. Without 3D views there is nothing to drop, and the
+        error is raised.
+        """
+        try:
+            return self._get_render_data(
+                render_3d=render_3d,
+                output_path=output_path if save else None,
+            )
+        except torch.cuda.OutOfMemoryError as e:
+            if not render_3d:
+                raise torch.cuda.OutOfMemoryError(
+                    f"Out of GPU memory while rendering environment "
+                    f"{self._render_env_idx}: {e}"
+                ) from e
+        # outside the except block, so the failed attempt's tensors can be freed
+        gc.collect()
+        torch.cuda.empty_cache()
+        self._logger.warning(
+            "Out of GPU memory while rendering the 3D views of environment %d; "
+            "rendering the 2D slices only.",
+            self._render_env_idx,
+        )
+        return self._get_render_data(
+            render_3d=False,
+            output_path=output_path if save else None,
+        )
+
     def _render_env(
         self,
         env_idx: int,
@@ -2104,13 +2043,12 @@ class FluidEnv(ABC, FluidEnvLike):
         from PIL import Image
 
         self._render_env_idx = env_idx
+        self._rendering = True
         try:
-            render_data = self._get_render_data(
-                render_3d=render_3d,
-                output_path=output_path if save else None,
-            )
+            render_data = self._render_data_or_2d(render_3d, output_path, save)
         finally:
             self._render_env_idx = 0
+            self._rendering = False
 
         if save:
             # the frames of every environment of a vectorized env are kept apart
@@ -2461,9 +2399,10 @@ class FluidEnv(ABC, FluidEnvLike):
         if self._ndims == 3:
             grids = [grid[:, :2, 0, :, :] for grid in grids]
 
+        palette = [DEFAULT_PALETTE[i % len(DEFAULT_PALETTE)] for i in range(len(grids))]
         fig, ax = plot_grids(
             grids,
-            color=DEFAULT_PALETTE[: len(grids)],  # type: ignore
+            color=palette,  # type: ignore
             type="pdf",
             linewidth=0.5,
             fig_scale=2,

@@ -66,6 +66,9 @@ All notable changes to FluidGym are documented in this file. The format is based
   `[E, n_agents, ...]` (previously flattened to `[E * n_agents, ...]`), and flags
   and infos are tensors (previously lists).
 - Faster rendering with higher-quality output for all environments.
+- Batched rendering resamples only the shown env; 3D rendering falls back to 2D
+  slices when out of GPU memory.
+- Observations are resampled at the sensors only (RBC).
 - Examples were reorganized into `examples/basic_usage` and
   `examples/advanced_usage`.
 - Upgraded PyTorch from 2.9 to 2.10 (via phiPICT, CUDA 12.8). Relaxed the
