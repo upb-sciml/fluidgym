@@ -60,6 +60,8 @@ All notable changes to FluidGym are documented in this file. The format is based
 
 - `step()` raises a `ValueError` for actions outside the action bounds, and when
   called after the episode has ended.
+- `ActionNoise` clips the noisy actions to the action bounds, so the noise never
+  produces actions that `step()` rejects.
 - `ParallelFluidEnv` follows the vector API: MARL observations are
   `[E, n_agents, ...]` (previously flattened to `[E * n_agents, ...]`), and flags
   and infos are tensors (previously lists).

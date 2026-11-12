@@ -71,7 +71,8 @@ def test_obs_extraction_wrapper(env_name: str) -> None:
     original_keys = list(original_obs_space.spaces.keys())
 
     np.random.seed(42)
-    keys = ["pressure"]
+    # Every environment observes the velocity, but not all the pressure (RBC-MHD)
+    keys = ["velocity"]
 
     env = ObsExtraction(env, keys=keys)
     new_obs_space = env.observation_space
@@ -84,8 +85,8 @@ def test_obs_extraction_wrapper(env_name: str) -> None:
         f"target keys {keys}."
     )
 
-    assert "pressure" in list(new_obs_space.spaces.keys()), (
-        "Observation space should contain 'pressure' key"
+    assert "velocity" in list(new_obs_space.spaces.keys()), (
+        "Observation space should contain 'velocity' key"
     )
 
     obs, _ = env.reset(seed=42)
