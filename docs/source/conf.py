@@ -16,7 +16,7 @@ templates_path = ["_templates"]
 html_static_path = ["_static"]
 
 html_theme = "sphinx_rtd_theme"
-html_logo = "_static/img/logo_lm.png"
+html_logo = "_static/img/logo_v020.png"
 html_context = {
     "display_github": True,
     "github_url": "https://github.com/upb-sciml/fluidgym",

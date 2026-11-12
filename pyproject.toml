@@ -77,7 +77,8 @@ version-file = "src/fluidgym/_version.py"
 
 # The PyPI description is README.md with the relative links made absolute: PyPI
 # resolves no relative paths and ignores GitHub's #gh-*-mode-only switch (both
-# logos would show), so only the light-mode logo is kept. The files are served
+# logos would show), so only the light-mode logo of such a pair is kept (the
+# current logo works for both modes and needs no switch). The files are served
 # from main on GitHub.
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
 content-type = "text/markdown"

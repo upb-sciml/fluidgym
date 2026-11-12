@@ -1,9 +1,6 @@
 <p align="center">
-    <a href="./docs/source/_static/img/logo_lm.png#gh-light-mode-only">
-        <img src="./docs/source/_static/img/logo_lm.png#gh-light-mode-only" alt="FluidGym Logo" width="50%"/>
-    </a>
-    <a href="./docs/source/_static/img/logo_dm.png#gh-dark-mode-only">
-        <img src="./docs/source/_static/img/logo_dm.png#gh-dark-mode-only" alt="FluidGym Logo" width="50%"/>
+    <a href="./docs/source/_static/img/logo_v020.png">
+        <img src="./docs/source/_static/img/logo_v020.png" alt="FluidGym Logo" width="46%"/>
     </a>
 </p>
 
