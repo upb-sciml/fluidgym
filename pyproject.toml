@@ -2,8 +2,8 @@
 name = "fluidgym"
 dynamic = ["version", "readme"]  # readme: see fancy-pypi-readme below
 description = "Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control"
-license = "MIT"
-license-files = ["LICENSE", "LICENSES/*.txt"]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
     { name = "Jannis Becktepe", email = "jannis.becktepe@tu-dortmund.de" }
 ]
@@ -105,7 +105,7 @@ replacement = '](https://github.com/upb-sciml/fluidgym/blob/main/\1)'
 include = [
     "/src/fluidgym",
     "/tests",
-    "/LICENSES",
+    "/LICENSE",
     "/README.md",
 ]
 

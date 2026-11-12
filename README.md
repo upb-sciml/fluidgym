@@ -30,7 +30,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fluidgym)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.10-EE4C2C?logo=pytorch&logoColor=white)
 ![CUDA](https://img.shields.io/badge/CUDA-12.8-%2376B900)
-![License](https://img.shields.io/badge/License-MIT-orange)
+![License](https://img.shields.io/badge/License-Apache--2.0-orange)
 [![Linters](https://github.com/upb-sciml/fluidgym/actions/workflows/linters.yml/badge.svg?branch=main)](https://github.com/upb-sciml/fluidgym/actions/workflows/linters.yml)
     
 </div>
@@ -178,7 +178,7 @@ for _ in range(50):
 
 ## License & Citation
 
-This repository is published under the MIT license. If you use FliudGym in your work, please cite us:
+This repository is published under the Apache-2.0 license. If you use FliudGym in your work, please cite us:
 
 ```bibtex
 @inproceedings{becktepe-fluidgym26,
