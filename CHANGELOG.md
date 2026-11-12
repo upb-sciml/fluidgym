@@ -4,7 +4,7 @@ All notable changes to FluidGym are documented in this file. The format is based
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.0] - Unreleased
+## [0.2.0] - 2026-11-12
 
 ### Highlights
 
@@ -43,6 +43,9 @@ All notable changes to FluidGym are documented in this file. The format is based
   `bptt_carry_spill_dir` and `adjoint_rtol`.
 - Better rendering: slice axis selection, `render_resolution`, mirroring, and
   per-env frames (`env_ids`).
+- Support for other PyTorch/CUDA versions through the
+  [phiPICT wheel index](https://upb-sciml.github.io/phiPICT/whl/): install the
+  matching phiPICT wheel first, then FluidGym (see the installation docs).
 - `env.load_domain()` to load a saved domain.
 - Fully differentiable resampling of the multiblock fields to a uniform grid.
 - Logging below the `fluidgym` namespace, quiet by default. Use
@@ -65,6 +68,8 @@ All notable changes to FluidGym are documented in this file. The format is based
   `examples/advanced_usage`.
 - Upgraded PyTorch from 2.9 to 2.10 (via phiPICT, CUDA 12.8). Relaxed the
   `matplotlib` pin.
+- Requires `phipict>=0.1.1,<0.2`. phiPICT 0.1.1 adds the wheel index and a clear
+  error when the installed PyTorch does not match the phiPICT build.
 - The build backend is now hatch. The version is derived from git tags, and the
   `experiments` extra and `dev`/`docs` extras became dependency groups.
 - The license changed from MIT to Apache-2.0.
@@ -132,7 +137,7 @@ All notable changes to FluidGym are documented in this file. The format is based
 > **Note:** Use the `FlattenObservation` wrapper (or FluidGym v0.0.2) to use the
 > models on HuggingFace, which were trained with v0.0.2.
 
-[0.2.0]: https://github.com/upb-sciml/fluidgym/compare/v0.1.2...HEAD
+[0.2.0]: https://github.com/upb-sciml/fluidgym/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/upb-sciml/fluidgym/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/upb-sciml/fluidgym/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/upb-sciml/fluidgym/releases/tag/v0.1.0
