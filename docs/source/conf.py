@@ -17,10 +17,10 @@ with mock(autodoc_mock_imports):
     import fluidgym
 
 project = "FluidGym"
-author = "Jannis Becktepe, Safe Autonomous Systems (SAS), TU Dortmund University"
+author = "Jannis Becktepe, Scientific Machine Learning Group, Paderborn University"
 copyright = (
     f"{datetime.date.today().strftime('%Y')}, "
-    "Safe Autonomous Systems (SAS), TU Dortmund University"
+    "Scientific Machine Learning Group, Paderborn University"
 )
 version = ".".join(fluidgym.__version__.split(".")[:2])
 release = version
