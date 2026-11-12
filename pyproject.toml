@@ -11,7 +11,7 @@ requires-python = ">=3.11,<3.14"
 dependencies = [
     # The solver; torch and pyamg come with it (phipict pins the torch minor
     # version its extension is built for)
-    "phipict==0.1.*",
+    "phipict>=0.1.1,<0.2",
     "gymnasium>=1.2.1",
     "numpy",
     "pandas",
