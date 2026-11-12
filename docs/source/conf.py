@@ -22,8 +22,8 @@ copyright = (
     f"{datetime.date.today().strftime('%Y')}, "
     "Safe Autonomous Systems (SAS), TU Dortmund University"
 )
-release = fluidgym.__version__
-version = ".".join(release.split(".")[:2])
+version = ".".join(fluidgym.__version__.split(".")[:2])
+release = version
 
 templates_path = ["_templates"]
 html_static_path = ["_static"]
