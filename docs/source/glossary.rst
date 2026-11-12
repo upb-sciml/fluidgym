@@ -30,6 +30,11 @@ Glossary
         layer heated from below and cooled from above, leading to the formation of
         convection cells.
 
+    MHD
+        Magnetohydrodynamics. The dynamics of electrically conducting fluids, such as
+        liquid metals, in magnetic fields, where induced currents exert a Lorentz force
+        on the flow.
+
     TCF
         Turbulent Channel Flow. A canonical flow configuration used to study turbulence
         in wall-bounded flows, characterized by a fluid flowing between two parallel

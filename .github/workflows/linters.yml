@@ -6,33 +6,38 @@ on:
 
   # When a push occurs on either of these branches
   push:
-   branches:
-     - main
+    branches:
+      - main
 
   # When a push occurs on a PR that targets these branches
   pull_request:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   linters:
-    name: "Python 3.10"
+    name: "Python 3.11"
     runs-on: ubuntu-latest
-
-    container:
-      image: python:3.10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
-      - name: Set up Python dependencies
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      # The hooks (ruff, mypy with its stubs) run in their own environments,
+      # see .pre-commit-config.yaml; only pre-commit itself is needed here.
+      # --group needs pip >= 25.1.
+      - name: Install pre-commit
         run: |
-          pip install --upgrade pip
-          pip install pre-commit ruff mypy types-seaborn pandas-stubs types-setuptools scipy-stubs
-
-      - name: Update git permissions
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          python -m pip install --upgrade pip
+          pip install --group dev
 
       - name: Run pre-commit (all files)
-        run: pre-commit run --all-files --verbose
+        run: pre-commit run --all-files --show-diff-on-failure

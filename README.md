@@ -1,11 +1,10 @@
 <p align="center">
-    <a href="./docs/images/logo_lm.png#gh-light-mode-only">
-        <img src="./docs/source/_static/img/logo_lm.png#gh-light-mode-only" alt="FluidGym Logo" width="50%"/>
-    </a>
-    <a href="./docs/images/logo_dm.png#gh-dark-mode-only">
-        <img src="./docs/source/_static/img/logo_dm.png#gh-dark-mode-only" alt="FluidGym Logo" width="50%"/>
+    <a href="./docs/source/_static/img/logo_v020.png">
+        <img src="./docs/source/_static/img/logo_v020.png" alt="FluidGym Logo" width="46%"/>
     </a>
 </p>
+
+<h1 align="center">FluidGym: Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control</h1>
 
 <table style="border-collapse: collapse; border: none;">
   <tr>
@@ -26,20 +25,25 @@
 
 <div align="center">
 
-[![PyPI version](https://badge.fury.io/py/fluidgym.svg)](https://badge.fury.io/py/fluidgym)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fluidgym)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.9-EE4C2C?logo=pytorch&logoColor=white)
-![CUDA](https://img.shields.io/badge/CUDA-12.8-%2376B900)
-![License](https://img.shields.io/badge/License-MIT-orange)
-[![Linters](https://github.com/safe-autonomous-systems/fluidgym/actions/workflows/linters.yml/badge.svg?branch=main)](https://github.com/safe-autonomous-systems/fluidgym/actions/workflows/linters.yml)
-    
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.10%20%7C%202.13--2.15-EE4C2C?logo=pytorch&logoColor=white)](https://upb-sciml.github.io/fluidgym/docs/installation.html)
+[![CUDA](https://img.shields.io/badge/CUDA-12%20%7C%2013-%2376B900)](https://upb-sciml.github.io/fluidgym/docs/installation.html)
+![License](https://img.shields.io/badge/License-Apache--2.0-orange)
+
+</div>
+<div align="center">
+
+[![Linters](https://github.com/upb-sciml/fluidgym/actions/workflows/linters.yml/badge.svg?branch=main)](https://github.com/upb-sciml/fluidgym/actions/workflows/linters.yml)
+[![Docs](https://github.com/upb-sciml/fluidgym/actions/workflows/docs.yml/badge.svg)](https://github.com/upb-sciml/fluidgym/actions/workflows/docs.yml)
+[![Release](https://github.com/upb-sciml/fluidgym/actions/workflows/release.yml/badge.svg)](https://github.com/upb-sciml/fluidgym/actions/workflows/release.yml)
+
 </div>
 
 <div align="center">
     <h3>
       <a href="#-installation">Installation</a> |
       <a href="#-getting-started">Getting Started</a> |
-      <a href="https://safe-autonomous-systems.github.io/fluidgym/docs/">Documentation</a> | 
+      <a href="https://upb-sciml.github.io/fluidgym/docs/">Documentation</a> | 
       <a href="https://arxiv.org/abs/2601.15015">Paper</a> |
       <a href="#-license-&-citation">License & Citation</a>
     </h3>
@@ -58,112 +62,76 @@
 - **Reference baselines and experiments** provided for widely used RL algorithms PPO and SAC.
 
 ### Models & Data
-- **All trained models** are publicly available on [HuggingFace](https://huggingface.co/collections/safe-autonomous-systems/fluidgym-benchmark-models).
-- **Complete training and test datasets** with results for all experimental runs are released for transparent comparison and reproducibility via our [HuggingFace dataset](https://huggingface.co/datasets/safe-autonomous-systems/fluidgym-experiments).
+- **All trained models** are publicly available on [HuggingFace](https://huggingface.co/collections/upb-sciml/fluidgym-benchmark-models).
+- **Complete training and test datasets** with results for all experimental runs are released for transparent comparison and reproducibility via our [HuggingFace dataset](https://huggingface.co/datasets/upb-sciml/fluidgym-experiments).
 
 ---
 
-## Introducing FluidGym v0.1
+## What's New in FluidGym v0.2
 
-We are happy to announce that FluidGym v0.1 comes with many updates and 
-improvements, mainly focusing on more convenient usage and integration with RL 
-frameworks:
+- **New solver**: FluidGym now runs on [phiPICT](https://github.com/upb-sciml/phiPICT),
+which is installed as a prebuilt wheel, so installing FluidGym compiles no CUDA code.
+- **Batched environments**: `fluidgym.make(id, n_envs=N)` runs `N` environments in one
+simulation on a single GPU, and `fluidgym.make_vec(..., devices=[...])` scales across
+GPUs.
+- **Much faster**: training is on average **~20×** faster, and over **100×** faster
+for some environments.
+- **MHD support**: new `RBCMHD3D-{easy,medium,hard}-v0` environments for liquid-metal
+convection in a magnetic field.
+- **Improved differentiability**: activation checkpointing for BPTT, plus Jacobian and
+VJP examples.
+- **New wrappers**: `VideoRecorder` and `PowerPenalty`.
 
-- **Unified SARL and MARL interface**: Previously, MARL environments implemented public 
-```reset_marl()``` and ```step_marl()``` functions. These have been removed and directly
-integrated with the ```reset()``` and ```step()``` functions. When creating an 
-environemtn via ```fluidgym.make()```, you can now pass a ```use_marl=True``` flag, to
-enable MARL and use the ```reset()``` and ```step()``` as before. The only difference is
-that they now return a batch of observations and rewards. This has also been updated for
-the integrations with PettingZoo and SB3.
-- **Gymnasium spaces**: ```FluidEnv``` now has ```action_space``` and 
-```observation_space``` attributes consistent with ```gymnasium```. Additionally, the 
-previous flattened observations have been replaced by ```Dict``` observation space
-containing individual fields, such as velocity and pressure fields, as individual keys.
-Furthermore, the individual observations are now shaped according to the spatial structure
-of the sensors, enabling the use of methods that leverage the spatial structure of the
-domain, e.g. CNNs, equivariant networks, etc.
-- **Environment wrappers**: Following the new observation spaces, we introduce 
-```FluidWrappers```, namely ```FlattenObservation```, ```ObsExtraction```, 
-```ActionNoise```, and ```SensorNoise```. The general wrapper interface enables easy
-integration of new wrappers as needed.
-- **Parallelization**: Using the new ```FluidEnvLike``` protocol, the 
-```ParallelFluidEnv``` can now seamlessly be used with all FluidGym wrappers and 
-integration wrappers. We updated the example to show how you can use FluidGym across
-multiple GPUs.
-
-**Important**: The ```FlattenObservation```ensures direct compatibility with our models
-on HuggingFace (trained with FluidGym v0.0.2). If you want to use the models, make sure
-to install FluidGym v0.0.2 or use the ```FlattenObservation``` wrapper. In case you
-encounter any issues, please report these via an Issue on GitHub. Thank you!
+See the [CHANGELOG](CHANGELOG.md) for all changes, including breaking changes and
+previous releases.
 
 ---
 
 ## Installation
 
-### 📦 Installation from PyPi
+### 📦 Installation from PyPI
 
-1. Ensure the correct PyTorch version is installed (compatible with CUDA 12.8):
-```bash
-pip install torch --index-url https://download.pytorch.org/whl/cu128
-```
-
-2. Install 
+FluidGym needs Linux, an NVIDIA GPU with a driver for CUDA 12.8 (≥ 570) and
+Python 3.11–3.13.
 
 ```bash
 pip install fluidgym
 ```
 
-### 🐳 Using Docker
-
-Instead of installing FluidGym, you can use one of our Docker containers:
-
-- [fluidgym-runtime](https://hub.docker.com/r/becktepe/fluidgym-runtime) for running FluidGym
-- [fluidgym-devel](https://hub.docker.com/r/becktepe/fluidgym-devel) for development
-
-Both containers come with the following Miniconda environments:
-- ```py310```: Python 3.10
-- ```py311```: Python 3.11
-- ```py312```: Python 3.12
-- ```py313```: Python 3.13
-
-Start the containers with:
+This also installs the solver [phiPICT](https://github.com/upb-sciml/phiPICT)
+together with the matching PyTorch (2.10, built with CUDA 12.8). There is no need
+to install PyTorch first: phiPICT's compiled extension only works with the PyTorch
+version it was built against, so pip replaces any other version. For other
+PyTorch/CUDA versions, first install the matching phiPICT wheel from its
+[wheel index](https://upb-sciml.github.io/phiPICT/docs/installation.html#other-pytorch-versions-wheel-index)
+(or build phiPICT from source), then FluidGym, e.g. for PyTorch 2.14 with CUDA 12.6:
 ```bash
-docker run -it --gpus all fluidgym-runtime bash
-docker run -it --gpus all fluidgym-devel bash
+pip install "torch==2.14.*" --index-url https://download.pytorch.org/whl/cu126
+pip install phipict -f https://upb-sciml.github.io/phiPICT/whl/torch-2.14+cu12.html
+pip install fluidgym
 ```
 
 ### 🧱 Build from Source
 
+FluidGym itself is pure Python; the CUDA solver comes with phiPICT from PyPI.
+
 1. Create a new conda environment and activate it:
 ```bash
-conda create -n fluidgym python=3.10
+conda create -n fluidgym python=3.12
 conda activate fluidgym
 ```
 
-2. Install gcc:
+2. Clone the repository, enter the directory and install the package:
 ```bash
-conda install pip "gcc_linux-64>=6.0,<=11.5" "gxx_linux-64>=6.0,<=11.5"
+pip install .
 ```
 
-3. Install the latest PyTorch for CUDA 12.8 via pip:
-```bash
-pip install torch --index-url https://download.pytorch.org/whl/cu128
-```
-
-4. Install the matching CUDA toolkit via conda:
-```bash
-conda install cuda-toolkit=12.8 -c nvidia/label/cuda-12.8.1
-```
-
-5. Clone the repository and enter the directory, then compile the custom CUDA kernels and install the package (this might take several minutes):
-```bash
-make install
-```
+For development, use `make install-dev` instead, which installs the package in
+editable mode together with the development dependencies (needs pip ≥ 25.1).
 
 ## Getting Started
 
-For an easy start, refer to our [documentation](https://safe-autonomous-systems.github.io/fluidgym/) and the [`examples`](examples) directory.
+For an easy start, refer to our [documentation](https://upb-sciml.github.io/fluidgym/) and the [`examples`](examples) directory.
 FluidGym provides a ```gymnasium```-like interface that can be used as follows:
 
 ```python
@@ -185,7 +153,7 @@ for _ in range(50):
 
 ## License & Citation
 
-This repository is published under the MIT license. If you use FliudGym in your work, please cite us:
+This repository is published under the Apache-2.0 license. If you use FliudGym in your work, please cite us:
 
 ```bibtex
 @inproceedings{becktepe-fluidgym26,

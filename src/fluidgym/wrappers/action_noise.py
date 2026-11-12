@@ -9,7 +9,9 @@ from fluidgym.wrappers.fluid_wrapper import FluidWrapper
 class ActionNoise(FluidWrapper):
     """A wrapper that adds Gaussian noise to the actions.
 
-    It adds Gaussian noise with standard deviation `sigma` to the actions.
+    It adds Gaussian noise with standard deviation `sigma` to the actions and clips
+    the noisy actions to the action space bounds, since the environment rejects
+    actions outside of them.
 
     Parameters
     ----------
@@ -33,7 +35,11 @@ class ActionNoise(FluidWrapper):
     def step(
         self, action: torch.Tensor
     ) -> tuple[
-        dict[str, torch.Tensor], torch.Tensor, bool, bool, dict[str, torch.Tensor]
+        dict[str, torch.Tensor],
+        torch.Tensor,
+        bool | torch.Tensor,
+        bool | torch.Tensor,
+        dict[str, torch.Tensor],
     ]:
         """Run one timestep of the environment's dynamics using the agent actions.
 
@@ -64,4 +70,11 @@ class ActionNoise(FluidWrapper):
             * self.__sigma
         )
 
-        return self._env.step(noisy_action)
+        # Per-agent bounds, broadcast over leading env and agent dims
+        low = torch.as_tensor(
+            self._env.action_space.low, device=action.device, dtype=action.dtype
+        )
+        high = torch.as_tensor(
+            self._env.action_space.high, device=action.device, dtype=action.dtype
+        )
+        return self._env.step(torch.minimum(torch.maximum(noisy_action, low), high))
