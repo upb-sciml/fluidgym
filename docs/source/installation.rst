@@ -24,9 +24,17 @@ the PyTorch version it was built for (PyTorch 2.10 with CUDA 12.8). There is no
 need to install PyTorch first: phiPICT's compiled extension only works with the
 PyTorch version it was built against, so pip replaces any other version.
 
-To use a different PyTorch or CUDA version, build phiPICT from source against
-your PyTorch first and then install FluidGym, see the
-`phiPICT installation docs <https://upb-sciml.github.io/phiPICT/installation.html#building-from-source>`_.
+To use a different PyTorch or CUDA version, first install the matching phiPICT
+wheel from the
+`phiPICT wheel index <https://upb-sciml.github.io/phiPICT/docs/installation.html#other-pytorch-versions-wheel-index>`_
+(or build phiPICT from source) and then FluidGym, e.g. for PyTorch 2.14 with
+CUDA 12.6:
+
+.. code-block:: bash
+
+    pip install "torch==2.14.*" --index-url https://download.pytorch.org/whl/cu126
+    pip install phipict -f https://upb-sciml.github.io/phiPICT/whl/torch-2.14+cu12.html
+    pip install fluidgym
 
 2. From GitHub
 --------------
