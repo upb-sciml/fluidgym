@@ -58,44 +58,28 @@
 - **Reference baselines and experiments** provided for widely used RL algorithms PPO and SAC.
 
 ### Models & Data
-- **All trained models** are publicly available on [HuggingFace](https://huggingface.co/collections/safe-autonomous-systems/fluidgym-benchmark-models).
-- **Complete training and test datasets** with results for all experimental runs are released for transparent comparison and reproducibility via our [HuggingFace dataset](https://huggingface.co/datasets/safe-autonomous-systems/fluidgym-experiments).
+- **All trained models** are publicly available on [HuggingFace](https://huggingface.co/collections/upb-sciml/fluidgym-benchmark-models).
+- **Complete training and test datasets** with results for all experimental runs are released for transparent comparison and reproducibility via our [HuggingFace dataset](https://huggingface.co/datasets/upb-sciml/fluidgym-experiments).
 
 ---
 
-## Introducing FluidGym v0.1
+## What's New in FluidGym v0.2
 
-We are happy to announce that FluidGym v0.1 comes with many updates and 
-improvements, mainly focusing on more convenient usage and integration with RL 
-frameworks:
+- **New solver**: FluidGym now runs on [phiPICT](https://github.com/upb-sciml/phiPICT),
+which is installed as a prebuilt wheel, so installing FluidGym compiles no CUDA code.
+- **Batched environments**: `fluidgym.make(id, n_envs=N)` runs `N` environments in one
+simulation on a single GPU, and `fluidgym.make_vec(..., devices=[...])` scales across
+GPUs.
+- **Much faster**: training is on average **~20×** faster, and over **100×** faster
+for some environments.
+- **MHD support**: new `RBCMHD3D-{easy,medium,hard}-v0` environments for liquid-metal
+convection in a magnetic field.
+- **Improved differentiability**: activation checkpointing for BPTT, plus Jacobian and
+VJP examples.
+- **New wrappers**: `VideoRecorder` and `PowerPenalty`.
 
-- **Unified SARL and MARL interface**: Previously, MARL environments implemented public 
-```reset_marl()``` and ```step_marl()``` functions. These have been removed and directly
-integrated with the ```reset()``` and ```step()``` functions. When creating an 
-environemtn via ```fluidgym.make()```, you can now pass a ```use_marl=True``` flag, to
-enable MARL and use the ```reset()``` and ```step()``` as before. The only difference is
-that they now return a batch of observations and rewards. This has also been updated for
-the integrations with PettingZoo and SB3.
-- **Gymnasium spaces**: ```FluidEnv``` now has ```action_space``` and 
-```observation_space``` attributes consistent with ```gymnasium```. Additionally, the 
-previous flattened observations have been replaced by ```Dict``` observation space
-containing individual fields, such as velocity and pressure fields, as individual keys.
-Furthermore, the individual observations are now shaped according to the spatial structure
-of the sensors, enabling the use of methods that leverage the spatial structure of the
-domain, e.g. CNNs, equivariant networks, etc.
-- **Environment wrappers**: Following the new observation spaces, we introduce 
-```FluidWrappers```, namely ```FlattenObservation```, ```ObsExtraction```, 
-```ActionNoise```, and ```SensorNoise```. The general wrapper interface enables easy
-integration of new wrappers as needed.
-- **Parallelization**: Using the new ```FluidEnvLike``` protocol, the 
-```ParallelFluidEnv``` can now seamlessly be used with all FluidGym wrappers and 
-integration wrappers. We updated the example to show how you can use FluidGym across
-multiple GPUs.
-
-**Important**: The ```FlattenObservation```ensures direct compatibility with our models
-on HuggingFace (trained with FluidGym v0.0.2). If you want to use the models, make sure
-to install FluidGym v0.0.2 or use the ```FlattenObservation``` wrapper. In case you
-encounter any issues, please report these via an Issue on GitHub. Thank you!
+See the [CHANGELOG](CHANGELOG.md) for all changes, including breaking changes and
+previous releases.
 
 ---
 
@@ -116,25 +100,6 @@ to install PyTorch first: phiPICT's compiled extension only works with the PyTor
 version it was built against, so pip replaces any other version. For other
 PyTorch/CUDA versions, build phiPICT from source against your PyTorch first, see
 its [installation docs](https://upb-sciml.github.io/phiPICT/installation.html#building-from-source).
-
-### 🐳 Using Docker
-
-Instead of installing FluidGym, you can use one of our Docker containers:
-
-- [fluidgym-runtime](https://hub.docker.com/r/becktepe/fluidgym-runtime) for running FluidGym
-- [fluidgym-devel](https://hub.docker.com/r/becktepe/fluidgym-devel) for development
-
-Both containers come with the following Miniconda environments:
-- ```py310```: Python 3.10
-- ```py311```: Python 3.11
-- ```py312```: Python 3.12
-- ```py313```: Python 3.13
-
-Start the containers with:
-```bash
-docker run -it --gpus all fluidgym-runtime bash
-docker run -it --gpus all fluidgym-devel bash
-```
 
 ### 🧱 Build from Source
 
