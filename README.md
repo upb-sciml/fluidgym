@@ -51,6 +51,11 @@
 
 ---
 
+## Experimental Results
+
+All results are available on [HuggingFace](https://huggingface.co/datasets/upb-sciml/mhd_control).
+This includes phiPICT validation results, RL results & model checkpoints, and inverse design results.
+
 ## Installation
 
 ### 📦 Installation from PyPI
