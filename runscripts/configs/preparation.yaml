@@ -1,0 +1,36 @@
+# @package _global_
+defaults:
+  - _self_
+
+seed: 42
+use_seed_domain: True
+
+env_id: RBCMHD3D-easy-v0
+env_kwargs: {}
+target_env_ids: null
+
+period: 20.0
+amplitude: 1.0
+phase: 0.0
+
+save_final_domain: true
+render_3d: true
+
+n_random_steps: 25
+domain_idx: 0
+modes: ["train", "val", "test"]
+overwrite_existing: false
+
+continue: true
+checkpoint_interval: 100
+
+hydra:
+  output_subdir: "."
+  run: 
+    dir: output/preparation/${env_id}/${domain_idx}
+  sweep:
+    dir: output/preparation/${env_id}/${domain_idx}
+    subdir: ""
+  job:
+    chdir: true
+

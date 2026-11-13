@@ -1,0 +1,51 @@
+# @package _global_
+defaults:
+  - _self_
+  - algorithm: shac
+  - cluster: local
+
+power_penalty: 0.0
+
+env_id: RBCMHD3D-easy-v0
+env_kwargs: {}
+
+seed: 42
+
+rl_mode: sarl
+rl_device: cuda
+multi_gpu: false
+env_render: false
+
+bptt_checkpoint: true
+bptt_offload_device: cpu
+bptt_carry_spill_dir: /raid/fluidgym_carry
+bptt_segment_size: 5
+
+adjoint_rtol: null
+
+total_timesteps: 3330
+log_freq: 1
+log_single_steps: true
+render_training: true
+
+ckpt_freq: 10
+continue_training: false
+
+task:
+  name: ${env_id}
+  env_autoresets: true
+
+wandb:
+  enable: true
+  entity: safe-autonomous-systems
+  project: jbecktepe-fluidgym-mhd
+
+hydra:
+  output_subdir: "."
+  run:
+    dir: output/training/${rl_mode}/${env_id}/${agent.algo}/${seed}
+  sweep:
+    dir: output/training/${rl_mode}/${env_id}/${agent.algo}/${seed}
+    subdir: ""
+  job:
+    chdir: true

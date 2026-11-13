@@ -1,0 +1,59 @@
+# @package _global_
+defaults:
+  - _self_
+  - algorithm: sb3_sac
+  - cluster: local
+
+rl_mode: sarl
+power_penalty: 0.0
+
+env_id: RBCMHD3D-easy-v0
+env_kwargs: {}
+  # randomize_initial_state: False
+eval_env_kwargs: {}
+  # randomize_initial_state: False
+  
+seed: 42
+
+# General training
+total_timesteps: 1e4
+
+# Evaluation
+n_eval_steps: 0
+eval_freq: ${eval:'${total_timesteps} // max(${n_eval_steps}, 1)'}
+log_freq: ${eval:'${total_timesteps} // 100'}
+n_eval_episodes: 1
+log_single_steps: true
+render_training: true
+
+# Checkpointing
+continue_training: false
+checkpoint_latest: true
+
+rl_device: cpu
+
+eval_callback:
+  _target_: fluidgym.integration.sb3.EvalCallback
+  eval_freq: ${eval_freq}
+  log_freq: ${log_freq}
+  n_eval_episodes: ${n_eval_episodes}
+  use_wandb: ${wandb.enable}
+  checkpoint_latest: ${checkpoint_latest}
+  log_single_steps: ${log_single_steps}
+  continue_training: ${continue_training}
+  
+wandb:
+  enable: true
+  entity: safe-autonomous-systems
+  project: jbecktepe-fluidgym-mhd
+
+hydra:
+  output_subdir: "."
+  run: 
+    dir: output/training/${rl_mode}/${env_id}/${algorithm.name}/${seed}
+  sweep:
+    dir: output/training/${rl_mode}/${env_id}/${algorithm.name}/${seed}
+    subdir: ""
+  job:
+    chdir: true
+

@@ -1,0 +1,46 @@
+defaults:
+  - _self_
+  - env: cylinder_jet_2d_easy
+
+seed: 42
+actions: random    # random | zero
+warmup_steps: 2    # untimed (one-off AMG setups, CUDA graph capture)
+repeats: 20        # timed env steps per row
+
+# intermediate pressure tolerance; auto = 10x the env's final one
+pressure_tol_intermediate: auto
+
+# phiPICT with one improvement switched off each (switches: solver_ablation/phipict.yaml)
+ablations:
+  no_fused_krylov:
+    label: w/o CUDA-CG
+    switches: {fused_krylov: false, krylov_graphs: false}
+  no_intermediate_tol:
+    label: w/o interm. tol.
+    switches: {intermediate_tol: false}
+  no_warm_start:
+    label: w/o warm start
+    # potential_reuse_result is the warm start of the MHD potential solve
+    switches: {pressure_warm_start: false, potential_reuse_result: false}
+
+# swept until OOM, a peak above `max_memory_pct`, or `patience` sizes in a row
+# without a new best
+batch_sizes: [2, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256, 384, 512]
+patience: 2
+# the best batch size (used for the phiPICT bar and the ablations) is the fastest
+# one whose peak GPU memory stays at or below this share of the device memory,
+# so the ablations, which may need more memory, have headroom
+max_memory_pct: 80
+
+aggregate_only: false
+results_root: output/benchmark
+local_data_path: null   # null: $FLUIDGYM_LOCAL_DATA_PATH or ./local_data
+
+hydra:
+  run:
+    dir: ${results_root}/${env_id}
+  sweep:
+    dir: ${results_root}
+    subdir: ${env_id}
+  job:
+    chdir: true

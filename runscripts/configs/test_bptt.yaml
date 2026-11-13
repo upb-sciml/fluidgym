@@ -1,0 +1,19 @@
+# @package _global_
+defaults:
+  - train_bptt
+  - _self_
+
+test_env_id: ${env_id}
+test_env_kwargs: ${env_kwargs}
+test_rl_mode: ${rl_mode}
+
+policy_checkpoint: bptt_policy.pth
+save_frames: false
+render_3d: true
+save_final_domain: true
+
+n_test_episodes: 10
+domain_idx: null
+
+wandb:
+  enable: false

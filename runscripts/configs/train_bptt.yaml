@@ -1,0 +1,63 @@
+# @package _global_
+defaults:
+  - _self_
+  - cluster: local
+
+power_penalty: 0.0
+
+env_id: RBCMHD3D-easy-v0
+env_kwargs: {}
+eval_env_kwargs: {}
+
+seed: 42
+
+rl_mode: sarl
+rl_device: cuda
+
+# mlp: feedback policy; constant: open-loop baseline, one learnable action
+policy_type: mlp
+
+bptt_checkpoint: true
+bptt_offload_device: cpu
+bptt_carry_spill_dir: /raid/fluidgym_carry
+bptt_segment_size: 5
+
+detach_obs: true
+normalize_obs: true
+
+horizon: 10
+reward_scale: 1.0
+adjoint_rtol: null
+
+total_timesteps: 3330
+lr: 1e-3
+discount_factor: 0.999
+max_grad_norm: 0.5
+
+critic:
+  enable: false
+  gamma: ${discount_factor}
+  units: [256, 256]
+  n_critics: 2
+  lr: 3e-4
+  tau: 0.005
+  batch_size: 256
+  buffer_size: 1e5
+  learning_starts: 256
+  updates_per_step: 4
+  max_grad_norm: 10.0
+
+wandb:
+  enable: true
+  entity: safe-autonomous-systems
+  project: jbecktepe-fluidgym-mhd
+
+hydra:
+  output_subdir: "."
+  run:
+    dir: output/training/${rl_mode}/${env_id}/BPTT${horizon}_${policy_type}/${seed}
+  sweep:
+    dir: output/training/${rl_mode}/${env_id}/BPTT${horizon}_${policy_type}/${seed}
+    subdir: ""
+  job:
+    chdir: true

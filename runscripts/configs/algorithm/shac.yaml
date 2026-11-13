@@ -1,0 +1,53 @@
+# @package agent
+algo: SHAC
+print_every: 1
+ckpt_every: ${ckpt_freq}
+
+network:
+  normalize_input: true
+  encoder: null
+
+  actor: Actor
+  actor_kwargs:
+    init_sigma: -2.3
+    mlp_kwargs:
+      units: [256, 256]
+      norm_type: LayerNorm
+      act_type: ELU
+  tanh_clamp: true
+
+  critic: Critic
+  critic_kwargs:
+    mlp_kwargs:
+      units: [256, 256]
+      norm_type: LayerNorm
+      act_type: ELU
+
+shac:
+  multi_gpu: ${multi_gpu}
+  num_actors: 1
+  share_encoder: false
+
+  reward_shaper:
+    fn: scale
+    scale: 1.0
+
+  max_epochs: ${eval:'-(-int(${total_timesteps}) // ${agent.shac.horizon_len})'}
+  max_agent_steps: ${total_timesteps}
+  horizon_len: 10
+  num_critic_batches: 1
+
+  gamma: 0.99
+  critic_method: td-lambda
+  lambda: 0.95
+  critic_iterations: 16
+  normalize_ret: false
+
+  optim_type: Adam
+  actor_optim_kwargs: {lr: 3e-4}
+  critic_optim_kwargs: {lr: 3e-4}
+  lr_schedule: constant
+  target_critic_alpha: 0.2
+  no_target_critic: false
+  max_grad_norm: 1.0
+  truncate_grads: true

@@ -1,0 +1,10 @@
+# @package _global_
+type: temp1
+
+log_time: 50.0
+hartmann_number: 0.0
+
+domain:
+  nx: 64
+  ny: 480
+  nz: 64
