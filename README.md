@@ -51,42 +51,6 @@
 
 ---
 
-## Key Features
-
-- **Standalone, GPU-accelerated fluid dynamics** implemented fully in PyTorch — no external CFD solvers required.
-- **Fully differentiable environments**, enabling both reinforcement learning and gradient-based control methods.
-- **Gymnasium-like API** with seamless integration into common RL frameworks.
-- **Standardized benchmarks** with fixed train/validation/test splits for fair and reproducible evaluation.
-- **Diverse AFC environments** (2D & 3D) with multiple difficulty levels, covering different regimes.
-- **Single-agent and multi-agent support** for centralized and decentralized control.
-- **Reference baselines and experiments** provided for widely used RL algorithms PPO and SAC.
-
-### Models & Data
-- **All trained models** are publicly available on [HuggingFace](https://huggingface.co/collections/upb-sciml/fluidgym-benchmark-models).
-- **Complete training and test datasets** with results for all experimental runs are released for transparent comparison and reproducibility via our [HuggingFace dataset](https://huggingface.co/datasets/upb-sciml/fluidgym-experiments).
-
----
-
-## What's New in FluidGym v0.2
-
-- **New solver**: FluidGym now runs on [phiPICT](https://github.com/upb-sciml/phiPICT),
-which is installed as a prebuilt wheel, so installing FluidGym compiles no CUDA code.
-- **Batched environments**: `fluidgym.make(id, n_envs=N)` runs `N` environments in one
-simulation on a single GPU, and `fluidgym.make_vec(..., devices=[...])` scales across
-GPUs.
-- **Much faster**: training is on average **~20×** faster, and over **100×** faster
-for some environments.
-- **MHD support**: new `RBCMHD3D-{easy,medium,hard}-v0` environments for liquid-metal
-convection in a magnetic field.
-- **Improved differentiability**: activation checkpointing for BPTT, plus Jacobian and
-VJP examples.
-- **New wrappers**: `VideoRecorder` and `PowerPenalty`.
-
-See the [CHANGELOG](CHANGELOG.md) for all changes, including breaking changes and
-previous releases.
-
----
-
 ## Installation
 
 ### 📦 Installation from PyPI
@@ -154,13 +118,3 @@ for _ in range(50):
 ## License & Citation
 
 This repository is published under the Apache-2.0 license. If you use FliudGym in your work, please cite us:
-
-```bibtex
-@inproceedings{becktepe-fluidgym26,
-    title={Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control},
-    author={Jannis Becktepe and Aleksandra Franz and Nils Thuerey and Sebastian Peitz},
-    booktitle={Forty-third International Conference on Machine Learning},
-    year={2026},
-    url={https://openreview.net/forum?id=ilEooI8fK1}
-}
-```
