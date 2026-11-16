@@ -121,7 +121,7 @@ conda create -n fluidgym python=3.12
 conda activate fluidgym
 ```
 
-2. Clone the repository, enter the directory and install the package:
+2. Clone the repository, enter the directory, and install the package:
 ```bash
 pip install .
 ```
@@ -156,11 +156,15 @@ for _ in range(50):
 This repository is published under the Apache-2.0 license. If you use FliudGym in your work, please cite us:
 
 ```bibtex
-@inproceedings{becktepe-fluidgym26,
-    title={Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control},
-    author={Jannis Becktepe and Aleksandra Franz and Nils Thuerey and Sebastian Peitz},
-    booktitle={Forty-third International Conference on Machine Learning},
-    year={2026},
-    url={https://openreview.net/forum?id=ilEooI8fK1}
-}
+@InProceedings{becktepe-fluidgym26,
+  title = 	     {Plug-and-Play Benchmarking of Reinforcement Learning Algorithms for Large-Scale Flow Control},
+  author =       {Becktepe, Jannis and Franz, Aleksandra and Thuerey, Nils and Peitz, Sebastian},
+  booktitle = 	 {Proceedings of the 43rd International Conference on Machine Learning},
+  pages = 	     {7244--7286},
+  year = 	     {2026},
+  editor = 	     {Zhang, Tong and Dudik, Miroslav and Jaggi, Martin and Agarwal, Alekh and Li, Sharon and Schuurmans, Dale and Zhu, Jerry and Berkenkamp, Felix and Dong, Hanze and Bietti, Alberto},
+  volume = 	     {306},
+  series = 	     {Proceedings of Machine Learning Research},
+  month = 	     {06--11 Jul},
+  publisher =    {PMLR},
 ```
