@@ -17,7 +17,7 @@ with mock(autodoc_mock_imports):
     import fluidgym
 
 project = "FluidGym"
-author = "Jannis Becktepe, Scientific Machine Learning Group, Paderborn University"
+author = "Scientific Machine Learning Group, Paderborn University"
 copyright = (
     f"{datetime.date.today().strftime('%Y')}, "
     "Scientific Machine Learning Group, Paderborn University"
