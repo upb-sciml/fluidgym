@@ -5,7 +5,7 @@ description = "Plug-and-Play Benchmarking of Reinforcement Learning Algorithms f
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
-    { name = "Jannis Becktepe", email = "jannis.becktepe@tu-dortmund.de" }
+    { name = "Scientific Machine Learning Group, Paderborn University" }
 ]
 requires-python = ">=3.11,<3.14"
 dependencies = [
