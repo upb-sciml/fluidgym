@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from functools import partial
 from pathlib import Path
-from typing import cast
+from typing import Literal, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -174,13 +174,14 @@ class TCF3DBottomEnv(FluidEnv):
         Tolerance for the pressure solve. None (the default) keeps the tolerance
         this environment is tuned at.
 
-    pressure_tol_intermediate: float | SolverTolerance | Mapping | None
-        Tolerance for the pressure solves before the final corrector. None (the
-        default) applies ``pressure_tol`` everywhere.
+    pressure_tol_intermediate: float | SolverTolerance | Mapping | "auto" | None
+        Tolerance for the pressure solves before the final corrector. ``"auto"``
+        (the default) uses 10x the final tolerance, None applies
+        ``pressure_tol`` everywhere.
 
     pressure_warm_start: bool
         Whether to seed each pressure solve with the previous sub-step's result.
-        Defaults to False.
+        Defaults to True.
 
     linear_solve_max_iter: int | None
         Iteration limit for the advection and pressure solves. None (the default)
@@ -283,9 +284,9 @@ class TCF3DBottomEnv(FluidEnv):
         advection_tol: float | SolverTolerance | Mapping[str, float] | None = None,
         pressure_tol: float | SolverTolerance | Mapping[str, float] | None = None,
         pressure_tol_intermediate: (
-            float | SolverTolerance | Mapping[str, float] | None
-        ) = None,
-        pressure_warm_start: bool = False,
+            float | SolverTolerance | Mapping[str, float] | Literal["auto"] | None
+        ) = "auto",
+        pressure_warm_start: bool = True,
         linear_solve_max_iter: int | None = None,
         exclude_advection_solve_gradients: bool | None = None,
         exclude_pressure_solve_gradients: bool | None = None,
