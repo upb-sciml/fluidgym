@@ -4,7 +4,7 @@ from abc import abstractmethod
 from collections.abc import Mapping
 from functools import partial
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -113,9 +113,9 @@ class AirfoilEnvBase(FluidEnv):
         advection_tol: float | SolverTolerance | Mapping[str, float] | None = None,
         pressure_tol: float | SolverTolerance | Mapping[str, float] | None = None,
         pressure_tol_intermediate: (
-            float | SolverTolerance | Mapping[str, float] | None
-        ) = None,
-        pressure_warm_start: bool = False,
+            float | SolverTolerance | Mapping[str, float] | Literal["auto"] | None
+        ) = "auto",
+        pressure_warm_start: bool = True,
         linear_solve_max_iter: int | None = None,
         exclude_advection_solve_gradients: bool | None = None,
         exclude_pressure_solve_gradients: bool | None = None,

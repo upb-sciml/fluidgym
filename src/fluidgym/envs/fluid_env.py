@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, NamedTuple
+from typing import Any, Literal, NamedTuple
 
 import numpy as np
 import pandas as pd
@@ -33,6 +33,23 @@ from fluidgym.util.data_utils import (
     save_statistics,
     save_uncontrolled_episode,
 )
+
+# ``pressure_tol_intermediate="auto"``: looser tolerance for non-final correctors
+AUTO_INTERMEDIATE_TOL_FACTOR = 10.0
+
+
+def _scaled_tolerance(
+    tol: float | SolverTolerance | torch.Tensor | None, factor: float
+) -> float | SolverTolerance | None:
+    """``tol`` loosened by ``factor``; None stays None."""
+    if tol is None:
+        return None
+    if isinstance(tol, SolverTolerance):
+        return SolverTolerance(
+            rtol=None if tol.rtol is None else factor * tol.rtol,
+            atol=None if tol.atol is None else factor * tol.atol,
+        )
+    return factor * float(tol)
 
 
 class Stats(NamedTuple):
@@ -125,6 +142,7 @@ class FluidEnv(ABC, FluidEnvLike):
     _advection_tol: float | SolverTolerance | None
     _pressure_tol: float | SolverTolerance | None
     _pressure_tol_intermediate: float | SolverTolerance | None
+    _pressure_tol_intermediate_auto: bool
     _pressure_warm_start: bool
 
     # Overrides applied to every simulation this env builds, see
@@ -230,9 +248,9 @@ class FluidEnv(ABC, FluidEnvLike):
         advection_tol: float | SolverTolerance | Mapping[str, float] | None = None,
         pressure_tol: float | SolverTolerance | Mapping[str, float] | None = None,
         pressure_tol_intermediate: (
-            float | SolverTolerance | Mapping[str, float] | None
-        ) = None,
-        pressure_warm_start: bool = False,
+            float | SolverTolerance | Mapping[str, float] | Literal["auto"] | None
+        ) = "auto",
+        pressure_warm_start: bool = True,
         linear_solve_max_iter: int | None = None,
         exclude_advection_solve_gradients: bool | None = None,
         exclude_pressure_solve_gradients: bool | None = None,
@@ -303,17 +321,18 @@ class FluidEnv(ABC, FluidEnvLike):
             (the default) keeps the tolerance the concrete environment picked for
             itself, see :meth:`_resolve_pressure_tol`.
 
-        pressure_tol_intermediate: float | SolverTolerance | Mapping | None
+        pressure_tol_intermediate: float | SolverTolerance | Mapping | "auto" | None
             Tolerance for every pressure solve that is not the final corrector.
             Only the final corrector's pressure survives into the solution, so the
-            earlier ones can be solved loosely. None (the default) applies
-            ``pressure_tol`` everywhere.
+            earlier ones can be solved loosely. ``"auto"`` (the default) uses
+            10x the final pressure tolerance, None applies ``pressure_tol``
+            everywhere.
 
         pressure_warm_start: bool
             Seed each pressure solve with the previous sub-step's result for the
             same corrector index instead of with zero. An initial guess cannot
             change the converged answer, only the iteration count. Defaults to
-            False.
+            True.
 
         linear_solve_max_iter: int | None
             Iteration limit for the advection and pressure solves. None (the
@@ -377,7 +396,13 @@ class FluidEnv(ABC, FluidEnvLike):
 
         self._advection_tol = parse_tolerance(advection_tol)
         self._pressure_tol = parse_tolerance(pressure_tol)
-        self._pressure_tol_intermediate = parse_tolerance(pressure_tol_intermediate)
+        # "auto" is resolved per simulation in _apply_solver_overrides
+        self._pressure_tol_intermediate_auto = pressure_tol_intermediate == "auto"
+        self._pressure_tol_intermediate = (
+            None
+            if self._pressure_tol_intermediate_auto
+            else parse_tolerance(pressure_tol_intermediate)
+        )
         self._pressure_warm_start = bool(pressure_warm_start)
 
         self._linear_solve_max_iter = (
@@ -1055,6 +1080,10 @@ class FluidEnv(ABC, FluidEnvLike):
         environment that sets one of these itself in ``_get_simulation`` keeps
         exactly what it set.
         """
+        if self._pressure_tol_intermediate_auto:
+            sim.pressure_tol_intermediate = _scaled_tolerance(
+                sim.pressure_tol, AUTO_INTERMEDIATE_TOL_FACTOR
+            )
         if self._linear_solve_max_iter is not None:
             sim.linear_solve_max_iterations = self._linear_solve_max_iter
         if self._exclude_advection_solve_gradients is not None:
